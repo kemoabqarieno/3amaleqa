@@ -9,6 +9,7 @@
         @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
         @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
         @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
+        @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
 
         :root {
             --bg-dark: #070b14; /* كحلي غامق جداً للغموض */
@@ -17,6 +18,7 @@
             --accent-neon: #38bdf8; /* أزرق نيون للطاقة */
             --text-main: #f8fafc;
             --border-color: rgba(56, 189, 248, 0.2);
+            --success-green: #22c55e;
         }
 
         body, html {
@@ -33,11 +35,11 @@
                 radial-gradient(at 90% 90%, rgba(250, 204, 21, 0.08) 0px, transparent 50%);
         }
 
-        /* حاوية الكارت الزجاجي (Glassmorphism) */
+        /* حاوية الكارت الزجاجي */
         .join-container {
             background: var(--glass);
-            backdrop-filter: blur(20px); /* تأثير الضباب */
-            padding: 50px 40px;
+            backdrop-filter: blur(20px);
+            padding: 40px;
             border-radius: 24px;
             border: 1px solid var(--border-color);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
@@ -46,22 +48,39 @@
             text-align: center;
             position: relative;
             animation: cardSlideIn 1s ease-out;
+            margin-top: 50px; /* مسافة للأيقونة فوق */
         }
 
-        /* شعار العمالقة المضيء */
-        .logo-header {
-            width: 120px; height: 120px;
+        /* شعار العمالقة في دائرة مضيئة */
+        .logo-circle-container {
+            position: absolute;
+            top: -60px; /* نصف قطر الدائرة تقريباً خارج الكارت */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background-color: var(--bg-dark);
+            border-radius: 50%;
+            border: 4px solid var(--accent-gold);
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* لضمان الدائرة */
+            z-index: 10;
+        }
+
+        .logo-img {
+            width: 90%; /* أصغر قليلاً من الدائرة */
+            height: 90%;
             background: url('3amlq.png') no-repeat center/contain;
-            margin: 0 auto 20px auto;
-            filter: drop-shadow(0 0 15px var(--accent-gold));
-            animation: logoPulse 2s infinite alternate;
         }
 
         .main-title {
             font-family: 'Belabelo', sans-serif;
             font-size: 2.8rem;
             color: var(--accent-gold);
-            margin-bottom: 10px;
+            margin: 60px 0 10px 0; /* مسافة من الأيقونة */
             text-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
         }
 
@@ -69,12 +88,12 @@
             font-family: 'DGRawnaq', sans-serif;
             font-size: 1.2rem;
             color: #94a3b8;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         /* تنسيق خانات الإدخال الاحترافية */
         .input-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             position: relative;
             text-align: right;
         }
@@ -97,7 +116,9 @@
             color: var(--text-main);
             font-size: 1.1rem;
             transition: all 0.3s ease;
-            box-sizing: border-box; /* لضمان عدم خروج البادينج */
+            box-sizing: border-box;
+            /* استخدام خط "جالاكسي" داخل الحقل */
+            font-family: 'Galaxy', sans-serif;
         }
 
         .styled-input:focus {
@@ -107,10 +128,10 @@
             background: rgba(0, 0, 0, 0.4);
         }
 
-        /* تحسين مظهر الـ Placeholder */
         .styled-input::placeholder {
             color: #475569;
             font-size: 0.9rem;
+            font-family: 'Segoe UI', sans-serif; /* Placeholder بخط عادي */
         }
 
         /* زر "الدخول" الأسطوري */
@@ -127,7 +148,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .btn-join:hover {
@@ -135,33 +156,63 @@
             box-shadow: 0 10px 30px rgba(250, 204, 21, 0.4);
         }
 
-        .btn-join:active {
-            transform: translateY(1px);
+        /* --- التنبيهات الزجاجية الاحترافية --- */
+        .custom-alert-container {
+            position: fixed;
+            top: -100px; /* مخفي في البداية */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(34, 197, 94, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--success-green);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            z-index: 2000;
+            transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
 
-        /* أنيميشن الدخول */
+        .alert-show { top: 20px; } /* يظهر من الأعلى */
+
+        .alert-icon {
+            width: 40px; height: 40px;
+            background-color: var(--success-green);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 1.5rem;
+        }
+
+        .alert-text {
+            flex: 1;
+            font-family: 'Dahka', sans-serif; /* خط "ضحكة" للتنبيه */
+            font-size: 1.4rem;
+            color: var(--text-main);
+        }
+
+        /* أنيميشن */
         @keyframes cardSlideIn {
             0% { transform: translateY(50px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes logoPulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--accent-gold)); }
-            100% { transform: scale(1.05); filter: drop-shadow(0 0 20px var(--accent-gold)); }
-        }
-
-        /* تحسينات للشاشات الصغيرة */
-        @media (max-width: 480px) {
-            .join-container { padding: 30px 20px; }
-            .main-title { font-size: 2.2rem; }
-            .styled-input { padding: 12px 15px; }
         }
     </style>
 </head>
 <body>
 
+    <div id="customAlert" class="custom-alert-container">
+        <div class="alert-icon">✓</div>
+        <div class="alert-text">تم تسجيل فريقك بنجاح!</div>
+    </div>
+
     <div class="join-container">
-        <div class="logo-header"></div>
+        <div class="logo-circle-container">
+            <div class="logo-img"></div>
+        </div>
+
         <h1 class="main-title">العمالقة</h1>
         <p class="sub-title">ادخل بيانات فريقك للاستعداد للمعركة</p>
 
@@ -195,18 +246,35 @@
     </div>
 
     <script>
-        // كود تجريبي لإضافة تأثير UX عند الضغط
-        document.getElementById('joinForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // منع التحميل الفعلي
-            const btn = e.target.querySelector('button');
-            btn.innerText = "جاري التسجيل...";
-            btn.style.background = "#475569"; // تغيير اللون للحظة
-
-            // هنا هيتحط كود الـ Firebase عشان يرفع البيانات
+        // كود التنبيه الاحترافي
+        function showSuccessAlert(message) {
+            const alert = document.getElementById('customAlert');
+            const alertText = alert.querySelector('.alert-text');
+            alertText.innerText = message;
+            alert.classList.add('alert-show');
+            
+            // إخفاء التنبيه بعد 3 ثواني
             setTimeout(() => {
-                alert("تم تسجيل فريقك بنجاح! انتظر إشارة البدء من الأدمن.");
-                btn.innerText = "تأكيد الانضمام 🔥";
-                btn.style.background = "linear-gradient(135deg, var(--accent-gold) 0%, #eab308 100%)";
+                alert.classList.remove('alert-show');
+            }, 3000);
+        }
+
+        // كود تجريبي
+        document.getElementById('joinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "جاري التسجيل...";
+            btn.style.opacity = "0.7";
+
+            // محاكاة الاتصال بالفايربيس
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.opacity = "1";
+                // استدعاء التنبيه الاحترافي
+                showSuccessAlert("تم تسجيل 'العمالقة' بنجاح! انتظر الإشارة.");
+                // إعادة تعيين الفورم
+                e.target.reset();
             }, 1500);
         });
     </script>
