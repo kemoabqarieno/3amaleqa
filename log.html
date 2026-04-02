@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الانضمام لمسابقة العمالقة 🏆</title>
+    <style>
+        /* تعريف الخطوط الفخمة */
+        @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
+        @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
+        @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
+
+        :root {
+            --bg-dark: #070b14; /* كحلي غامق جداً للغموض */
+            --glass: rgba(255, 255, 255, 0.03); /* تأثير الزجاج */
+            --accent-gold: #facc15; /* أصفر ذهبي للعمالقة */
+            --accent-neon: #38bdf8; /* أزرق نيون للطاقة */
+            --text-main: #f8fafc;
+            --border-color: rgba(56, 189, 248, 0.2);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(250, 204, 21, 0.08) 0px, transparent 50%);
+        }
+
+        /* حاوية الكارت الزجاجي (Glassmorphism) */
+        .join-container {
+            background: var(--glass);
+            backdrop-filter: blur(20px); /* تأثير الضباب */
+            padding: 50px 40px;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            animation: cardSlideIn 1s ease-out;
+        }
+
+        /* شعار العمالقة المضيء */
+        .logo-header {
+            width: 120px; height: 120px;
+            background: url('3amlq.png') no-repeat center/contain;
+            margin: 0 auto 20px auto;
+            filter: drop-shadow(0 0 15px var(--accent-gold));
+            animation: logoPulse 2s infinite alternate;
+        }
+
+        .main-title {
+            font-family: 'Belabelo', sans-serif;
+            font-size: 2.8rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+        }
+
+        .sub-title {
+            font-family: 'DGRawnaq', sans-serif;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+        }
+
+        /* تنسيق خانات الإدخال الاحترافية */
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+            text-align: right;
+        }
+
+        .input-label {
+            display: block;
+            font-family: 'DGRawnaq', sans-serif;
+            font-size: 0.9rem;
+            color: var(--accent-neon);
+            margin-bottom: 8px;
+            margin-right: 5px;
+        }
+
+        .styled-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box; /* لضمان عدم خروج البادينج */
+        }
+
+        .styled-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* تحسين مظهر الـ Placeholder */
+        .styled-input::placeholder {
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        /* زر "الدخول" الأسطوري */
+        .btn-join {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #eab308 100%);
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-dark);
+            font-family: 'Dahka', sans-serif;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .btn-join:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(250, 204, 21, 0.4);
+        }
+
+        .btn-join:active {
+            transform: translateY(1px);
+        }
+
+        /* أنيميشن الدخول */
+        @keyframes cardSlideIn {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes logoPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--accent-gold)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 20px var(--accent-gold)); }
+        }
+
+        /* تحسينات للشاشات الصغيرة */
+        @media (max-width: 480px) {
+            .join-container { padding: 30px 20px; }
+            .main-title { font-size: 2.2rem; }
+            .styled-input { padding: 12px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="join-container">
+        <div class="logo-header"></div>
+        <h1 class="main-title">العمالقة</h1>
+        <p class="sub-title">ادخل بيانات فريقك للاستعداد للمعركة</p>
+
+        <form id="joinForm">
+            <div class="input-group">
+                <label class="input-label">اسم الفريق (المجموعة)</label>
+                <input type="text" id="teamName" class="styled-input" placeholder="مثلاً: صقور المستقبل" required>
+            </div>
+
+            <div class="input-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label class="input-label">اللاعب 1 (القائد)</label>
+                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
+                </div>
+                <div>
+                    <label class="input-label">اللاعب 2</label>
+                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
+                </div>
+                <div>
+                    <label class="input-label">اللاعب 3</label>
+                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
+                </div>
+                <div>
+                    <label class="input-label">اللاعب 4</label>
+                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-join">تأكيد الانضمام 🔥</button>
+        </form>
+    </div>
+
+    <script>
+        // كود تجريبي لإضافة تأثير UX عند الضغط
+        document.getElementById('joinForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // منع التحميل الفعلي
+            const btn = e.target.querySelector('button');
+            btn.innerText = "جاري التسجيل...";
+            btn.style.background = "#475569"; // تغيير اللون للحظة
+
+            // هنا هيتحط كود الـ Firebase عشان يرفع البيانات
+            setTimeout(() => {
+                alert("تم تسجيل فريقك بنجاح! انتظر إشارة البدء من الأدمن.");
+                btn.innerText = "تأكيد الانضمام 🔥";
+                btn.style.background = "linear-gradient(135deg, var(--accent-gold) 0%, #eab308 100%)";
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
