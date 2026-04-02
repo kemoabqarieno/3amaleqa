@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* الحفاظ على كل الخطوط والتنسيقات الأصلية */
         @font-face { font-family: 'Amira'; src: url('اميرة.ttf'); }
         @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
         @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
@@ -14,249 +15,158 @@
         @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
         @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
         :root {
-            --neon-red: #ff003c;
-            --neon-gold: #facc15;
-            --neon-brown: #8b4513;
-            --neon-brown-light: #d2691e;
-            --neon-red: #ff003c;
-            --bg-dark: #0a0505;
+            --neon-red: #ff003c; --neon-gold: #facc15; --neon-brown: #8b4513;
+            --neon-brown-light: #d2691e; --bg-dark: #0a0505;
         }
 
         body {
             background: radial-gradient(circle at center, #101827 0%, var(--bg-dark) 100%);
-            color: white; font-family: 'Cairo', sans-serif;
-            min-height: 100vh; margin: 0; overflow-x: hidden;
+            color: white; font-family: 'Cairo', sans-serif; min-height: 100vh;
         }
 
         .glass {
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 0, 60, 0.2);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 0, 60, 0.2); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
 
-        .main-title { font-family: 'Amira', sans-serif; color: var(--neon-gold); font-size: 4.5rem; text-shadow: 0 0 15px rgba(250, 204, 21, 0.5); }
+        .main-title { font-family: 'Amira', sans-serif; color: var(--neon-gold); text-shadow: 0 0 15px rgba(250, 204, 21, 0.5); }
         .war-label { font-size: 0.8rem; font-weight: 900; letter-spacing: 2px; color: var(--neon-brown-light); text-transform: uppercase; }
-        .kufa-font { font-family: 'Kufa', sans-serif; }
-        .instruction-card { 
-            background: transparent; border: 1px solid rgba(210, 105, 30, 0.2); border-right: 4px solid var(--neon-brown);
-            padding: 12px; border-radius: 8px; margin-bottom: 15px; font-family: 'Kufa', sans-serif; font-size: 1rem; color: #fde68a;
-            transition: all 0.3s ease;
-        }
-        .instruction-card:hover {
-            border-color: var(--neon-gold);
-            box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
-        }
+        .instruction-card { border-right: 4px solid var(--neon-brown); font-family: 'Kufa', sans-serif; }
         
-        /* شبكة رادار الفرق */
-        .team-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px;
-        }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
         .team-box {
             aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px; cursor: pointer; transition: all 0.3s;
-            font-family: 'Belabelo', sans-serif; font-size: 0.9rem; text-align: center; padding: 5px;
+            border-radius: 8px; cursor: pointer; transition: 0.3s;
+            font-family: 'Belabelo', sans-serif; font-size: 0.9rem; text-align: center;
         }
-        .team-box.selected {
-            border-color: var(--neon-gold); background: rgba(250, 204, 21, 0.2);
-            box-shadow: 0 0 15px var(--neon-gold); transform: scale(1.05);
-            color: var(--neon-gold);
-        }
+        .team-box.selected { border-color: var(--neon-gold); background: rgba(250, 204, 21, 0.2); color: var(--neon-gold); transform: scale(1.05); }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .active-tab { border-bottom: 4px solid var(--neon-red); color: var(--neon-red); }
 
-        .active-tab { border-bottom: 4px solid var(--neon-red); color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
+        .timer-svg { transform: rotate(-90deg); }
+        .timer-circle { fill: none; stroke: var(--neon-gold); stroke-width: 8; stroke-dasharray: 565; transition: 1s linear; }
+        #timer-text { font-family: 'DGRawnaq', sans-serif; text-shadow: 0 0 20px rgba(250, 204, 21, 0.3); }
 
-        .btn-action {
-            transition: all 0.2s; position: relative; overflow: hidden;
-        }
-        .btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        .buzzer-strike { border: 2px solid var(--neon-red) !important; background: rgba(255, 0, 60, 0.1) !important; }
         .btn-action:active { transform: scale(0.95); }
-
-        /* تنسيق المؤقت الدائري */
-        .timer-container {
-            position: relative; width: 180px; height: 180px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 20px;
-        }
-        .timer-svg { transform: rotate(-90deg); width: 180px; height: 180px; }
-        .timer-circle {
-            fill: none; stroke: var(--neon-gold); stroke-width: 8;
-            stroke-dasharray: 565; stroke-dashoffset: 0;
-            transition: stroke-dashoffset 1s linear;
-        }
-        #timer-text { 
-            position: absolute; font-family: 'DGRawnaq', sans-serif; 
-            font-size: 3.5rem; color: var(--neon-gold); text-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
-        }
-
-        /* تنبيه البازر */
-        .buzzer-strike {
-            border: 2px solid var(--neon-red) !important;
-            background: rgba(255, 0, 60, 0.1) !important;
-            box-shadow: inset 0 0 30px rgba(255, 0, 60, 0.2);
-        }
     </style>
 </head>
 <body class="p-4 lg:p-8">
 
     <header class="flex justify-between items-center mb-6 glass p-6 rounded-2xl border-b-2 border-red-600/50">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-gradient-to-br from-red-600 via-brown-700 to-red-900 rounded-xl flex items-center justify-center shadow-lg shadow-red-500/30">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div class="w-14 h-14 bg-gradient-to-br from-red-600 to-red-900 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2"/></svg>
             </div>
             <h1 class="main-title text-4xl">غرفة العمليات</h1>
         </div>
-        <div id="status" class="flex items-center gap-2 bg-green-500/10 text-green-400 px-4 py-2 rounded-full border border-green-500/30 text-xs font-black tracking-widest">
-            <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
-            RADAR ACTIVE
+        <div id="status" class="flex items-center gap-2 bg-green-500/10 text-green-400 px-4 py-2 rounded-full border border-green-500/30 text-xs font-black">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span> RADAR ACTIVE
         </div>
     </header>
 
-    <nav class="flex gap-4 mb-6 border-b border-slate-700">
-        <button onclick="openTab('live')" id="tab-live" class="pb-3 px-6 font-bold active-tab">المباراة المباشرة</button>
-        <button onclick="openTab('qbank')" id="tab-qbank" class="pb-3 px-6 font-bold text-slate-500">بنك الملفات والأسئلة 📂</button>
-        <button onclick="openTab('judge')" id="tab-judge" class="pb-3 px-6 font-bold text-slate-500">منطقة التحكيم</button>
-        <button onclick="openTab('stats')" id="tab-stats" class="pb-3 px-6 font-bold text-slate-500">إحصائيات النخبة</button>
+    <nav class="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
+        <button onclick="openTab('live')" id="tab-live" class="pb-3 px-6 font-bold active-tab whitespace-nowrap">المباراة المباشرة</button>
+        <button onclick="openTab('qbank')" id="tab-qbank" class="pb-3 px-6 font-bold text-slate-500 whitespace-nowrap">بنك الأسئلة 📂</button>
+        <button onclick="openTab('judge')" id="tab-judge" class="pb-3 px-6 font-bold text-slate-500 whitespace-nowrap">منطقة التحكيم</button>
+        <button onclick="openTab('stats')" id="tab-stats" class="pb-3 px-6 font-bold text-slate-500 whitespace-nowrap">إحصائيات النخبة</button>
         <a href="bazel.html" target="_blank" class="pb-3 px-6 font-bold text-red-400 hover:text-white mr-auto flex items-center gap-2">اختبار البازر ⚡</a>
     </nav>
 
-    <!-- التبويب الأول: الرادار والتحكم -->
     <section id="live" class="tab-content active space-y-6">
-        <div class="instruction-card">
-            💡 إرشادات الإدارة العيا: ابدأ باختيار الفرق من الرادار، ثم انتقل لبنك الأسئلة. يمكنك التحكم في الموقت وبث الإجابة للجمهور من هنا بكل سلاسة.
+        <div class="instruction-card bg-slate-900/50 p-4 rounded-lg text-amber-100">
+            💡 إرشادات: اختر الفريقين من الرادار (بحد أقصى 2) ثم اضغط "إطلاق المباراة".
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- شبكة الـ 32 فريق -->
             <div class="lg:col-span-2 glass p-6 rounded-2xl">
-                <h3 class="war-label mb-4 text-red-500">رادار الفرق (32 فريق)</h3>
-                <div class="team-grid" id="teamsGrid">
-                    <!-- توليد 32 مربع أوتوماتيكياً -->
-                </div>
+                <h3 class="war-label mb-4 text-red-500">رادار الفرق</h3>
+                <div class="team-grid" id="teamsGrid"></div>
                 <div class="mt-6 flex justify-center">
-                    <button onclick="deployMatch()" class="btn-action bg-red-600 text-white px-10 py-4 rounded-xl font-black text-xl shadow-lg shadow-red-600/30">إطلاق المباراة للمسرح 🚀</button>
+                    <button onclick="deployMatch()" class="bg-red-600 text-white px-10 py-4 rounded-xl font-black text-xl shadow-lg">إطلاق المباراة 🚀</button>
                 </div>
             </div>
-
-            <!-- وحدة الوقت والعجلة -->
             <div class="space-y-6">
-                <div class="glass p-6 rounded-2xl text-center border-t-4 border-gold-500">
-                    <h3 class="war-label mb-6">المؤقت التكتيكي</h3>
-                    <div class="timer-container">
-                        <svg class="timer-svg" viewBox="0 0 200 200">
+                <div class="glass p-6 rounded-2xl text-center border-t-4 border-yellow-500">
+                    <div class="relative w-44 h-44 mx-auto mb-4 flex items-center justify-center">
+                        <svg class="timer-svg w-full h-full" viewBox="0 0 200 200">
                             <circle class="timer-circle" id="circleProgress" cx="100" cy="100" r="90"></circle>
                         </svg>
-                        <div id="timer-text">00:30</div>
+                        <div id="timer-text" class="absolute text-4xl font-bold text-yellow-500">00:30</div>
                     </div>
-                    <div class="flex flex-col gap-4">
-                        <button onclick="controlTimer('start')" class="btn-action bg-green-600/30 text-green-400 py-4 rounded-xl border border-green-500/50 font-black text-xl flex items-center justify-center gap-2 shadow-lg shadow-green-500/10">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"/></svg>
-                            بدء الوقت
-                        </button>
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="controlTimer('pause')" class="btn-action bg-yellow-600/20 text-yellow-400 py-3 rounded-xl border border-yellow-500/30 font-black flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"/></svg>
-                                توقيف
-                            </button>
-                            <button onclick="controlTimer('reset')" class="btn-action bg-red-600/20 text-red-400 py-3 rounded-xl border border-red-500/30 font-black flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"/></svg>
-                                إعادة
-                            </button>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="controlTimer('start')" class="bg-green-600/30 text-green-400 py-3 rounded-xl border border-green-500/50 font-black">بدء</button>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="controlTimer('pause')" class="bg-yellow-600/20 text-yellow-400 py-2 rounded-lg border border-yellow-500/30">توقيف</button>
+                            <button onclick="controlTimer('reset')" class="bg-red-600/20 text-red-400 py-2 rounded-lg border border-red-500/30">إعادة</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="glass p-6 rounded-2xl flex flex-col gap-4">
-                    <button onclick="spinWheel()" class="btn-action bg-gold-600 text-black py-4 rounded-xl font-black text-lg shadow-lg flex items-center justify-center gap-3">تدوير العجلة 🎡</button>
-                    <button id="broadcastAnsBtn" onclick="broadcastAnswer()" class="btn-action bg-red-600 text-white py-4 rounded-xl font-black text-lg shadow-lg hidden">كشف الإجابة للجمهور 👁️</button>
-                    <button onclick="sendHint()" class="btn-action bg-brown-600 text-white py-4 rounded-xl font-black text-lg shadow-lg">إرسال تلميحة للمسرح 💡</button>
+                <div class="glass p-6 rounded-2xl flex flex-col gap-3">
+                    <button onclick="spinWheel()" class="bg-yellow-500 text-black py-4 rounded-xl font-black">تدوير العجلة 🎡</button>
+                    <button id="broadcastAnsBtn" onclick="broadcastAnswer()" class="bg-red-600 text-white py-4 rounded-xl font-black hidden">كشف الإجابة 👁️</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- تبويب بنك الأسئلة -->
     <section id="qbank" class="tab-content space-y-6">
-        <div class="instruction-card">
-            💡 إرشادات بنك الأسئلة: اختر الملف المطلوب، ثم انقر على السؤال لإرساله للمسرح. ستظهر لك الإجابة النموذجية في منطقة التحكيم للمراجعة.
-        </div>
         <div class="glass p-6 rounded-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="war-label text-brown-400">بنك الملفات والأسئلة</h3>
-                    <select id="fileSelector" class="bg-slate-900 border border-red-500/30 p-2 rounded-lg text-gold-400 font-bold outline-none" onchange="loadQuestionsFromFile()">
-                        <option value="علوم">ملف العلوم 🧪</option>
-                        <option value="رياضيات">ملف الرياضيات 📐</option>
-                        <option value="ثقافة">ملف الثقافة العامة 🌍</option>
-                    </select>
-                </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="qBankGrid">
-                <!-- يتم توليد الأسئلة عبر JavaScript -->
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="war-label text-amber-600">اختيار ملف الأسئلة</h3>
+                <select id="fileSelector" class="bg-slate-900 border border-red-500/30 p-2 rounded-lg text-yellow-400 font-bold" onchange="loadQuestionsFromFile()">
+                    <option value="علوم">ملف العلوم 🧪</option>
+                    <option value="رياضيات">ملف الرياضيات 📐</option>
+                    <option value="ثقافة">ملف الثقافة العامة 🌍</option>
+                </select>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="qBankGrid"></div>
         </div>
     </section>
 
-    <!-- التبويب الثاني: التحكيم والضربة القاضية -->
     <section id="judge" class="tab-content space-y-6">
-        <div class="instruction-card" style="border-right-color: var(--neon-red);">
-            💡 إرشادات التحكيم: انتظر إشارة البازر من المتسابقين، ثم راجع الإجابة النموذجية المعروضة قبل تأكيد النتيجة لتعديل النقاط آلياً.
-        </div>
-        <div id="buzzerPanel" class="glass p-12 rounded-[2.5rem] text-center border-4 border-slate-800 transition-all duration-300">
+        <div id="buzzerPanel" class="glass p-12 rounded-[2.5rem] text-center transition-all duration-300">
             <div id="waitingState">
-                <div class="w-24 h-24 border-8 border-slate-800 border-t-red-500 rounded-full animate-spin mx-auto mb-8"></div>
-                <p class="text-slate-500 text-3xl font-black italic">في انتظار إشارة من العمالقة...</p>
+                <div class="w-20 h-20 border-8 border-slate-800 border-t-red-500 rounded-full animate-spin mx-auto mb-6"></div>
+                <p class="text-slate-500 text-2xl font-black">انتظار إشارة العمالقة...</p>
             </div>
-
             <div id="strikeState" class="hidden">
-                <h3 class="war-label text-red-500 mb-4 animate-pulse">DETECTED STRIKE ⚠️</h3>
-                <div class="flex items-center justify-center gap-8 mb-8">
-                    <div class="w-32 h-32 rounded-full border-4 border-white/20 overflow-hidden bg-slate-800">
-                        <img id="winnerPhoto" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Giants" alt="Player">
-                    </div>
+                <h3 class="war-label text-red-500 mb-4 animate-pulse">STRIKE DETECTED ⚠️</h3>
+                <div class="flex items-center justify-center gap-6 mb-6">
+                    <img id="winnerPhoto" class="w-28 h-28 rounded-full border-4 border-white/10" src="">
                     <div class="text-right">
-                        <h2 id="winnerName" class="text-6xl font-black text-white mb-2 team-names">---</h2>
-                        <p id="winnerTeam" class="text-3xl text-red-400 font-bold">فريق الصقور</p>
+                        <h2 id="winnerName" class="text-5xl font-black">---</h2>
+                        <p id="winnerTeam" class="text-2xl text-red-400">---</p>
                     </div>
                 </div>
-                <div class="bg-red-950/40 p-5 rounded-2xl mb-8 border border-red-500/20 text-right">
-                    <p class="war-label text-red-400 mb-2">الإجابة النموذجية:</p>
-                    <p id="adminAnswerView" class="text-3xl font-bold text-white">---</p>
+                <div class="bg-red-950/40 p-4 rounded-xl mb-6 text-right border border-red-500/20">
+                    <p class="text-red-400 text-sm mb-1">الإجابة النموذجية:</p>
+                    <p id="adminAnswerView" class="text-2xl font-bold">---</p>
                 </div>
-                <div class="grid grid-cols-2 gap-6">
-                    <button onclick="handleJudge(true)" class="btn-action bg-green-600 text-white py-8 rounded-2xl font-black text-4xl shadow-2xl">إجابة صحيحة ✅</button>
-                    <button onclick="handleJudge(false)" class="btn-action bg-red-600 text-white py-8 rounded-2xl font-black text-4xl shadow-2xl">إجابة خاطئة ❌</button>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="handleJudge(true)" class="bg-green-600 py-6 rounded-xl font-black text-2xl shadow-lg">صح ✅</button>
+                    <button onclick="handleJudge(false)" class="bg-red-600 py-6 rounded-xl font-black text-2xl shadow-lg">خطأ ❌</button>
                 </div>
             </div>
         </div>
-        <button onclick="resetBuzzers()" class="w-full glass py-6 rounded-2xl border-2 border-red-500/50 text-red-400 font-black text-2xl hover:bg-red-500 hover:text-white transition-all">فتح البازرات مرة أخرى 🔓</button>
+        <button onclick="resetBuzzers()" class="w-full glass py-4 rounded-xl border-2 border-red-500/50 text-red-400 font-bold">فتح البازرات يدوياً 🔓</button>
     </section>
 
-    <!-- التبويب الثالث: النتائج وMVP -->
     <section id="stats" class="tab-content space-y-6">
-        <div class="instruction-card" style="border-right-color: var(--neon-gold);">
-            💡 إرشادات النتائج: يتم تحديث الترتيب تلقائياً. استخدم "إعلان البطل" في نهاية الدور لبث الفرحة والاحتفال.
-        </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="glass p-8 rounded-3xl">
-                <h3 class="war-label mb-6 text-gold-400">ترتيب الفرق العمالقة</h3>
-                <div id="teamsLeaderboard" class="space-y-4">
-                    <!-- قائمة الفرق -->
-                </div>
-            </div>
-            <div class="glass p-8 rounded-3xl border-l-8 border-brown-600">
-                <h3 class="war-label mb-6 text-brown-400">أفضل 5 عمالقة (MVP)</h3>
-                <div id="mvpLeaderboard" class="space-y-4">
-                    <!-- قائمة اللاعبين -->
-                </div>
-                <button onclick="announceChampion()" class="w-full mt-8 btn-action bg-gradient-to-r from-red-600 to-brown-600 text-white py-5 rounded-2xl font-black text-2xl shadow-xl">إعلان بطل المسابقة 🏆</button>
+            <div class="glass p-6 rounded-2xl">
+                <h3 class="war-label mb-4 text-yellow-400">الترتيب العام</h3>
+                <div id="teamsLeaderboard" class="space-y-2"></div>
             </div>
         </div>
     </section>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, update, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
@@ -265,152 +175,147 @@
             databaseURL: "https://amaleqa-default-rtdb.firebaseio.com",
             appId: "1:635598551087:web:fdf0ab135003224393eeda"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- إعداد الرادار ---
-        const grid = document.getElementById('teamsGrid');
         let selectedTeams = [];
-        let allTeams = [];
-        let currentMatchKey = { teamA: null, teamB: null };
+        let allTeams = {};
+        let currentQuestion = null;
+        let timeLeft = 30;
+        let timerInterval = null;
 
-        // --- بنك الأسئلة ---
-        const questionFiles = {
-            "علوم": [
-                { text: "ما هو أسرع كوكب يدور حول الشمس؟", answer: "عطارد", hint: "الأقرب للشمس" },
-                { text: "ما هو الغاز الذي تطلقه النباتات في النهار؟", answer: "الأكسجين", hint: "نحتاجه للتنفس" }
-            ],
-            "رياضيات": [
-                { text: "ما هو ناتج 12 ضرب 12؟", answer: "144", hint: "مربع العدد 12" },
-                { text: "كم دقيقة في 3 ساعات؟", answer: "180 دقيقة", hint: "60 ضرب 3" }
-            ],
-            "ثقافة": [
-                { text: "ما هي عاصمة اليابان؟", answer: "طوكيو", hint: "مدينة التكنولوجيا" },
-                { text: "من هو كاتب رواية 1984؟", answer: "جورج أورويل", hint: "كاتب بريطاني شهير" }
-            ]
-        };
-
-        window.loadQuestionsFromFile = () => {
-            const selector = document.getElementById('fileSelector');
-            if (!selector) return;
-            const file = selector.value;
-            const qGrid = document.getElementById('qBankGrid');
-            if (qGrid) {
-                qGrid.innerHTML = '';
-                questionFiles[file].forEach((item, index) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'glass p-4 rounded-xl text-right hover:border-red-400 transition-all text-lg font-bold flex items-center gap-3';
-                    btn.innerHTML = `<span class="bg-red-500/20 text-red-400 w-8 h-8 rounded-full flex items-center justify-center text-sm">${index + 1}</span> <span>${item.text}</span>`;
-                    btn.onclick = () => {
-                        set(ref(db, 'current_question'), { text: item.text, hint: item.hint, answer: item.answer });
-                        set(ref(db, 'show_answer'), false);
-                        document.getElementById('adminAnswerView').innerText = item.answer;
-                        document.getElementById('broadcastAnsBtn').classList.remove('hidden');
-                        alert("تم بث السؤال! 🚀");
-                        openTab('live');
-                    };
-                    qGrid.appendChild(btn);
-                });
-            }
-        };
-        loadQuestionsFromFile(); // تحميل أولي
-
+        // سحب الفرق وتوليد الرادار
         onValue(ref(db, 'teams'), (snap) => {
-            const data = snap.val();
-            if (!data) return;
-            allTeams = data; // حفظ كائن الفرق كاملاً
+            allTeams = snap.val() || {};
+            const grid = document.getElementById('teamsGrid');
             grid.innerHTML = '';
-            Object.keys(data).forEach(teamName => {
+            Object.keys(allTeams).forEach(name => {
                 const box = document.createElement('div');
-                box.className = `team-box ${selectedTeams.includes(teamName) ? 'selected' : ''}`;
-                box.innerText = teamName;
+                box.className = `team-box ${selectedTeams.includes(name) ? 'selected' : ''}`;
+                box.innerText = name;
                 box.onclick = () => {
-                    if (selectedTeams.includes(teamName)) {
-                        selectedTeams = selectedTeams.filter(t => t !== teamName);
-                        box.classList.remove('selected');
-                    } else if (selectedTeams.length < 2) {
-                        selectedTeams.push(teamName);
-                        box.classList.add('selected');
-                    }
+                    if(selectedTeams.includes(name)) selectedTeams = selectedTeams.filter(t => t !== name);
+                    else if(selectedTeams.length < 2) selectedTeams.push(name);
+                    updateRadarUI();
                 };
                 grid.appendChild(box);
             });
-
-            // تحديث إحصائيات النخبة (Leaderboard)
-            const teamsBoard = document.getElementById('teamsLeaderboard');
-            if (teamsBoard) {
-                teamsBoard.innerHTML = '';
-                const sortedTeams = Object.entries(data).sort((a, b) => (b[1].score || 0) - (a[1].score || 0));
-                sortedTeams.slice(0, 10).forEach(([name, info]) => {
-                    teamsBoard.innerHTML += `
-                        <div class="flex justify-between items-center glass p-4 rounded-xl border-r-4 border-gold-500">
-                            <span class="font-bold text-xl">${name}</span>
-                            <span class="text-gold-400 font-black text-2xl">${info.score || 0}</span>
-                        </div>`;
-                });
-            }
+            updateLeaderboard();
         });
 
-        window.deployMatch = () => {
-            if (selectedTeams.length < 2) return alert("اختر فريقين لبدء الإنزال!");
-            const teamA = selectedTeams[0];
-            const teamB = selectedTeams[1];
-            set(ref(db, 'active_match'), {
-                teamA: { name: teamA, score: allTeams[teamA].score || 0, players: allTeams[teamA].players || [] },
-                teamB: { name: teamB, score: allTeams[teamB].score || 0, players: allTeams[teamB].players || [] },
-                status: 'live'
+        function updateRadarUI() {
+            document.querySelectorAll('.team-box').forEach(box => {
+                box.classList.toggle('selected', selectedTeams.includes(box.innerText));
             });
-            currentMatchKey = { teamA, teamB };
-            alert(`تم إرسال ${teamA} ضد ${teamB} إلى المسرح!`);
-            openTab('judge');
+        }
+
+        // إطلاق المباراة
+        window.deployMatch = () => {
+            if(selectedTeams.length < 2) return alert("اختر فريقين أولاً!");
+            set(ref(db, 'active_match'), {
+                teamA: { name: selectedTeams[0], score: allTeams[selectedTeams[0]].score || 0 },
+                teamB: { name: selectedTeams[1], score: allTeams[selectedTeams[1]].score || 0 }
+            });
+            alert("تم إرسال الفرق للمسرح!");
+            openTab('qbank');
         };
 
-        // --- نظام التبويبات ---
-        window.openTab = (tabId) => {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('tab-' + tabId).classList.add('active-tab');
+        // إدارة الأسئلة
+        const questionFiles = {
+            "علوم": [{ text: "ما هو أسرع كوكب؟", answer: "عطارد", time: 15 }, { text: "غاز التنفس؟", answer: "أكسجين", time: 20 }],
+            "رياضيات": [{ text: "12 * 12؟", answer: "144", time: 10 }],
+            "ثقافة": [{ text: "عاصمة اليابان؟", answer: "طوكيو", time: 15 }]
         };
 
-        // --- مراقبة البازر ---
+        window.loadQuestionsFromFile = () => {
+            const file = document.getElementById('fileSelector').value;
+            const qGrid = document.getElementById('qBankGrid');
+            qGrid.innerHTML = '';
+            questionFiles[file].forEach((q, i) => {
+                const btn = document.createElement('button');
+                btn.className = "glass p-4 rounded-xl text-right hover:border-red-500 font-bold flex gap-3";
+                btn.innerHTML = `<span class='text-red-400'>${i+1}</span> ${q.text}`;
+                btn.onclick = () => {
+                    currentQuestion = q;
+                    set(ref(db, 'current_question'), { text: q.text, answer: q.answer });
+                    set(ref(db, 'buzzer_winner'), ""); // تصفير الفائز
+                    set(ref(db, 'buzzer_status'), 'open'); // فتح البازر
+                    set(ref(db, 'show_answer'), false);
+                    document.getElementById('adminAnswerView').innerText = q.answer;
+                    document.getElementById('broadcastAnsBtn').classList.remove('hidden');
+                    
+                    // تشغيل التايمر فوراً
+                    timeLeft = q.time || 30;
+                    controlTimer('start');
+                    openTab('judge');
+                };
+                qGrid.appendChild(btn);
+            });
+        };
+        window.loadQuestionsFromFile();
+
+        // منطق المؤقت
+        window.controlTimer = (action) => {
+            if(action === 'start') {
+                if(timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    if(timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerUI();
+                        set(ref(db, 'timer_value'), timeLeft);
+                    } else {
+                        clearInterval(timerInterval);
+                    }
+                }, 1000);
+            } else if(action === 'pause') {
+                clearInterval(timerInterval);
+            } else if(action === 'reset') {
+                clearInterval(timerInterval);
+                timeLeft = 30;
+                updateTimerUI();
+                set(ref(db, 'timer_value'), 30);
+            }
+        };
+
+        function updateTimerUI() {
+            document.getElementById('timer-text').innerText = `00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
+            document.getElementById('circleProgress').style.strokeDashoffset = 565 - (timeLeft/30)*565;
+        }
+
+        // مراقبة البازر
         onValue(ref(db, 'buzzer_winner'), (snap) => {
-            const winner = snap.val();
+            const w = snap.val();
             const panel = document.getElementById('buzzerPanel');
-            const waiting = document.getElementById('waitingState');
             const strike = document.getElementById('strikeState');
-            
-            if (winner && winner.name) {
-                document.getElementById('winnerName').innerText = winner.name;
-                document.getElementById('winnerTeam').innerText = winner.team;
-                document.getElementById('winnerPhoto').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${winner.name}`;
-                waiting.classList.add('hidden');
-                strike.classList.remove('hidden');
+            const wait = document.getElementById('waitingState');
+            if(w && w.name) {
+                document.getElementById('winnerName').innerText = w.name;
+                document.getElementById('winnerTeam').innerText = w.team;
+                document.getElementById('winnerPhoto').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${w.name}`;
+                wait.classList.add('hidden'); strike.classList.remove('hidden');
                 panel.classList.add('buzzer-strike');
+                controlTimer('pause'); // وقف الوقت لما حد يدوس
             } else {
-                waiting.classList.remove('hidden');
-                strike.classList.add('hidden');
+                wait.classList.remove('hidden'); strike.classList.add('hidden');
                 panel.classList.remove('buzzer-strike');
             }
         });
 
-        window.handleJudge = (isCorrect) => {
-            if (isCorrect) {
-                onValue(ref(db, 'buzzer_winner'), (snap) => {
-                    const winner = snap.val();
-                    if (winner && winner.team) {
-                        const teamKey = (winner.team === currentMatchKey.teamA) ? 'teamA' : 'teamB';
-                        
-                        // تحديث نتيجة المباراة الحالية
-                        runTransaction(ref(db, `active_match/${teamKey}/score`), (score) => (score || 0) + 10);
-                        
-                        // تحديث نتيجة الفريق الكلية في قاعدة البيانات
-                        runTransaction(ref(db, `teams/${winner.team}/score`), (score) => (score || 0) + 10);
-                        
-                        alert(`تمت إضافة 10 نقاط لـ ${winner.team} 🎯`);
-                    }
-                }, { onlyOnce: true });
+        // التحكيم
+        window.handleJudge = async (isCorrect) => {
+            const snap = await get(ref(db, 'buzzer_winner'));
+            const winner = snap.val();
+            if(!winner) return;
+
+            if(isCorrect) {
+                const matchSnap = await get(ref(db, 'active_match'));
+                const match = matchSnap.val();
+                const teamKey = (winner.team === match.teamA.name) ? 'teamA' : 'teamB';
+                
+                // تحديث الماتش والترتيب الكلي
+                runTransaction(ref(db, `active_match/${teamKey}/score`), s => (s||0) + 10);
+                runTransaction(ref(db, `teams/${winner.team}/score`), s => (s||0) + 10);
+                alert("تم إضافة 10 نقاط!");
             }
             resetBuzzers();
         };
@@ -420,51 +325,29 @@
             set(ref(db, 'buzzer_status'), 'open');
         };
 
-        // --- منطق المؤقت المركزي ---
-        let timeLeft = 30;
-        let timerInterval = null;
-        
-        window.controlTimer = (action) => {
-            if (action === 'start') {
-                if (timerInterval) return;
-                timerInterval = setInterval(() => {
-                    if (timeLeft > 0) {
-                        timeLeft--;
-                        updateTimerUI();
-                        set(ref(db, 'timer_value'), timeLeft);
-                    } else {
-                        clearInterval(timerInterval);
-                        timerInterval = null;
-                    }
-                }, 1000);
-            } else if (action === 'pause') {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            } else if (action === 'reset') {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                timeLeft = 30;
-                updateTimerUI();
-                set(ref(db, 'timer_value'), 30);
-            }
+        window.openTab = (id) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('tab-'+id).classList.add('active-tab');
         };
 
-        function updateTimerUI() {
-            const s = timeLeft < 10 ? '0' + timeLeft : timeLeft;
-            document.getElementById('timer-text').innerText = `00:${s}`;
-            const offset = 565 - (timeLeft / 30) * 565;
-            document.getElementById('circleProgress').style.strokeDashoffset = offset;
+        function updateLeaderboard() {
+            const board = document.getElementById('teamsLeaderboard');
+            if(!board) return;
+            board.innerHTML = '';
+            Object.entries(allTeams).sort((a,b) => (b[1].score||0)-(a[1].score||0)).slice(0,5).forEach(([n,v]) => {
+                board.innerHTML += `<div class="flex justify-between glass p-3 rounded-lg border-r-4 border-yellow-500">
+                    <span>${n}</span> <span class="font-bold text-yellow-500">${v.score||0}</span>
+                </div>`;
+            });
         }
 
         window.spinWheel = () => {
-            onValue(ref(db, 'wheel_status'), (snap) => {
-                const current = snap.val();
-                set(ref(db, 'wheel_status'), current === 'show' ? 'hide' : 'show');
-            }, { onlyOnce: true });
+            get(ref(db, 'wheel_status')).then(s => set(ref(db, 'wheel_status'), s.val()==='show'?'hide':'show'));
         };
-
-        window.sendHint = () => set(ref(db, 'hint_trigger'), Date.now());
         window.broadcastAnswer = () => set(ref(db, 'show_answer'), true);
+
     </script>
 </body>
 </html>
