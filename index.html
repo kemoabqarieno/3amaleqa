@@ -2,191 +2,306 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>شاشة العمالقة الكبرى 🏆</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شاشة العمالقة الكبرى 🏆 - The Grand Arena</title>
     <style>
+        /* تعريف الخطوط الملكية */
         @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
-        @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
+        @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
         @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
+        @font-face { font-family: 'Amira'; src: url('اميرة.ttf'); }
+        @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
+        @font-face { font-family: 'Kofa'; src: url('الكوفا.ttf'); }
 
         :root {
-            --primary: #0f172a;
-            --accent: #facc15;
+            --bg-deep: #02040a;
+            --gold: #facc15;
+            --gold-glow: rgba(250, 204, 21, 0.5);
+            --neon-blue: #00f7ff;
+            --neon-glow: rgba(0, 247, 255, 0.4);
             --white: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         body, html {
-            margin: 0; padding: 0; height: 100%;
-            background-color: var(--primary);
+            margin: 0; padding: 0; height: 100vh;
+            background-color: var(--bg-deep);
             color: var(--white);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(0, 247, 255, 0.1) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(250, 204, 21, 0.05) 0px, transparent 50%);
         }
 
-        /* تقسيم الشاشة الاستراتيجي */
-        .grid-container {
+        /* حاوية الشبكة الرئيسية الفخمة */
+        .arena-grid {
             display: grid;
-            grid-template-columns: 250px 1fr 250px;
-            grid-template-rows: 150px 1fr 100px;
+            grid-template-columns: 320px 1fr 320px;
+            grid-template-rows: 160px 1fr 120px;
             height: 100vh;
-            gap: 10px;
-            padding: 10px;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        /* الهيدر واللوجو */
+        /* --- الهيدر العلوي --- */
         .main-header {
             grid-column: 1 / span 3;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            border-bottom: 3px solid var(--accent);
-        }
-
-        .logo-box {
-            width: 120px; height: 120px;
-            background: url('3amlq.png') no-repeat center/contain;
-        }
-
-        /* الموقت */
-        .timer-box {
-            font-family: 'Dahka';
-            font-size: 4rem;
-            color: var(--accent);
-            text-shadow: 0 0 20px rgba(250,204,21,0.4);
-        }
-
-        /* منطقة العرض الوسطى (الأسئلة + البازر) */
-        .content-area {
-            grid-column: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 0 40px;
             position: relative;
+            overflow: hidden;
         }
 
-        #question-display {
-            font-family: 'DGRawnaq';
-            font-size: 3.5vw;
-            text-align: center;
+        .main-header::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
 
-        /* واجهة "البطل" اللي داس بازر */
-        #buzzer-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--accent);
-            color: var(--primary);
-            display: none; /* يظهر فقط عند الضغط */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
-            animation: bounceIn 0.6s ease;
-            z-index: 100;
-        }
+        .header-team { font-family: 'Belabelo'; font-size: 2.8rem; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .header-team.team-a { color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-glow); }
+        .header-team.team-b { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
 
-        .winner-name { font-family: 'Dahka'; font-size: 5rem; }
-        .winner-team { font-family: 'Belabelo'; font-size: 2.5rem; }
-
-        /* الجوانب (النقاط وعجلة الحظ) */
-        .side-panel {
-            background: rgba(255,255,255,0.03);
-            border-radius: 15px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .score-item {
-            font-family: 'Belabelo';
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .score-val { font-size: 2.5rem; color: var(--accent); }
-
-        /* عجلة الحظ البسيطة */
-        .wheel-placeholder {
+        .logo-center {
             width: 150px; height: 150px;
-            border: 5px dashed var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: auto;
-            font-size: 0.8rem;
+            background: url('3amlq.png') no-repeat center/contain;
+            filter: drop-shadow(0 0 20px var(--gold-glow));
+            animation: logoPulse 3s infinite alternate;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); opacity: 1; }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); }
+        /* --- الألواح الجانبية (عجلة الحظ والترتيب) --- */
+        .side-panel {
+            background: var(--glass);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
+
+        .panel-title {
+            font-family: 'DGRawnaq';
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 5px;
+        }
+
+        /* الترتيب */
+        #leaderboard-content { width: 100%; }
+        .leaderboard-item {
+            display: flex; justify-content: space-between;
+            font-family: 'Kofa'; font-size: 1.2rem;
+            margin-bottom: 10px; padding: 10px;
+            background: rgba(255,255,255,0.02); border-radius: 8px;
+        }
+        .item-rank { color: var(--gold); font-weight: bold; }
+
+        /* عجلة الحظ (شكل جمالي حالياً) */
+        .wheel-placeholder {
+            flex: 1; display: flex; justify-content: center; align-items: center;
+        }
+        .wheel-visual {
+            width: 200px; height: 200px;
+            border-radius: 50%; border: 5px dashed var(--gold);
+            position: relative; animation: wheelSpin 10s linear infinite;
+        }
+        .wheel-visual::after {
+            content: '🎡'; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); font-size: 3rem;
+        }
+
+        /* --- منطقة السؤال الكبرى --- */
+        .question-arena {
+            grid-column: 2;
+            background: var(--glass);
+            border-radius: 20px;
+            border: 1px solid var(--neon-blue-glow);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 40px; position: relative;
+        }
+
+        #timer-display {
+            position: absolute; top: 20px; right: 20px;
+            font-family: 'Dahka'; font-size: 4rem; color: var(--gold);
+            text-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        #question-category {
+            font-family: 'Galaxy'; font-size: 1.8rem; color: var(--neon-blue);
+            margin-bottom: 20px;
+        }
+
+        #question-text {
+            font-family: 'Amira'; font-size: 4.2rem; text-align: center;
+            line-height: 1.2; text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        /* --- الفوتر السفلي (رجل المباراة المتوقع) --- */
+        .mvp-footer {
+            grid-column: 1 / span 3;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Kofa'; font-size: 1.4rem;
+        }
+        #mvp-name { font-family: 'Dahka'; color: var(--gold); margin-right: 15px; font-size: 2rem; }
+
+        /* --- الـ Overlays الأسطورية --- */
+        /* 1. تنبيه البازر (لما حد يدوس) */
+        .buzzer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(250, 204, 21, 0.95); /* ذهبي العمالقة */
+            color: var(--bg-deep); z-index: 1000;
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+            animation: openBuzzer 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67) both;
+        }
+
+        .w-team { font-family: 'Belabelo'; font-size: 3rem; margin: 0; }
+        .w-player { font-family: 'Dahka'; font-size: 7rem; margin: 10px 0; }
+        .w-status { font-family: 'DGRawnaq'; font-size: 2rem; font-weight: bold; }
+
+        /* 2. تنبيه الفوز بالصعود */
+        .confetti-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('confetti.gif'); /* تحتاج ملف GIF شفاف أو مكتبة */
+            background-size: cover; z-index: 1001; display: none;
+        }
+
+        /* --- الأنيميشن --- */
+        @keyframes logoPulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.05); opacity: 1; } }
+        @keyframes wheelSpin { 100% { transform: rotate(360deg); } }
+        @keyframes openBuzzer { 0% { transform: scale(0.8) translateY(100%); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+
     </style>
 </head>
 <body>
 
-    <div class="grid-container">
+    <div id="buzzerOverlay" class="buzzer-overlay">
+        <p class="w-team" id="bTeamName">فريق العمالقة</p>
+        <h2 class="w-player" id="bPlayerName">أحمد محمد</h2>
+        <p class="w-status">يجاوب الآن... <span id="bTime"></span></p>
+    </div>
+    <div id="confettiOverlay" class="confetti-overlay"></div>
+
+    <div class="arena-grid">
         <header class="main-header">
-            <div class="team-top">فريق: <span id="current-t1" style="font-family:'Belabelo'">الصقور</span></div>
-            <div class="logo-box"></div>
-            <div class="timer-box" id="timer">30</div>
-            <div class="team-top">فريق: <span id="current-t2" style="font-family:'Belabelo'">النجوم</span></div>
+            <div class="header-team team-a" id="teamANameDisp">الفريق الأول</div>
+            <div class="logo-center"></div>
+            <div class="header-team team-b" id="teamBNameDisp">الفريق الثاني</div>
         </header>
 
         <aside class="side-panel">
-            <h3 style="font-family:'Belabelo'">الترتيب</h3>
-            <div class="score-item">
-                <div>الصقور</div>
-                <div class="score-val">120</div>
-            </div>
-            <div class="score-item">
-                <div>النجوم</div>
-                <div class="score-val">95</div>
+            <h3 class="panel-title">الترتيب الحدي</h3>
+            <div id="leaderboard-content">
+                <div class="leaderboard-item"><span class="item-rank">1</span> الصقور <span class="item-score">150</span></div>
+                <div class="leaderboard-item"><span class="item-rank">2</span> الوحوش <span class="item-score">120</span></div>
             </div>
         </aside>
 
-        <main class="content-area">
-            <div id="question-display">في أي عام بدأت مسابقة العمالقة؟</div>
-            
-            <div id="buzzer-overlay">
-                <div class="winner-team" id="win-team">فريق الصقور</div>
-                <div class="winner-name" id="win-name">أحمد محمد</div>
-                <p>يجاوب الآن...</p>
-            </div>
+        <main class="question-arena">
+            <div id="timer-display">30</div>
+            <div id="question-category">المجال: ؟؟؟</div>
+            <h1 id="question-text">بانتظار انطلاق العمالقة...</h1>
         </main>
 
         <aside class="side-panel">
-            <h3 style="font-family:'Belabelo'">عجلة الحظ</h3>
-            <div class="wheel-placeholder">SPIN 🎡</div>
-            <p style="font-size: 0.7rem; text-align: center; margin-top: 10px;">عجلة لاختيار فئة السؤال</p>
+            <h3 class="panel-title">عجلة الحظ</h3>
+            <div class="wheel-placeholder">
+                <div class="wheel-visual"></div>
+            </div>
         </aside>
 
-        <footer style="grid-column: 1 / span 3; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-family:'Belabelo';">
-            رجل المباراة المتوقع: <span id="mvp" style="color:var(--accent); margin-right: 10px;"> ؟؟؟ </span>
+        <footer class="mvp-footer">
+            رجل المباراة المتوقع حالياً: <span id="mvp-name"> ؟؟؟ </span>
         </footer>
     </div>
 
-    <script>
-        // دالة محاكاة لوصول إشارة من البازر (دي اللي هتتربط بالفايربيس)
-        function triggerBuzzer(name, team) {
-            document.getElementById('win-name').innerText = name;
-            document.getElementById('win-team').innerText = team;
-            document.getElementById('buzzer-overlay').style.display = 'flex';
-            // إيقاف التايمر برمجياً هنا
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // لإخفاء البازر والعودة للسؤال (يتم التحكم بها من عندك)
-        function resetBuzzer() {
-            document.getElementById('buzzer-overlay').style.display = 'none';
-        }
-        
-        // تجربة: دوس على الشاشة عشان تشوف شكل البازر لما يشتغل
-        document.body.onclick = () => triggerBuzzer("مصطفى محمد", "فريق العمالقة");
+        // الـ Config بتاعك الجامد
+        const firebaseConfig = {
+            apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
+            authDomain: "amaleqa.firebaseapp.com",
+            projectId: "amaleqa",
+            databaseURL: "https://amaleqa-default-rtdb.firebaseio.com",
+            appId: "1:635598551087:web:fdf0ab135003224393eeda"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const buzzerOverlay = document.getElementById('buzzerOverlay');
+        const bPlayerName = document.getElementById('bPlayerName');
+        const bTeamName = document.getElementById('bTeamName');
+        const timerDisplay = document.getElementById('timer-display');
+        const questionText = document.getElementById('question-text');
+        const confettiOverlay = document.getElementById('confettiOverlay');
+
+        // 1. استماع لحظي للسؤال والفئة
+        onValue(ref(db, 'current_question'), (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                questionText.innerText = data.text || "جاهزون؟";
+                document.getElementById('question-category').innerText = "المجال: " + (data.category || "؟؟؟");
+            }
+        });
+
+        // 2. استماع لحظي لـ "بطل البازر" (Buzzer Winner)
+        onValue(ref(db, 'buzzer_winner'), (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.name !== "") {
+                bPlayerName.innerText = data.name;
+                bTeamName.innerText = data.team;
+                // حساب وقت الاستجابة بالملي ثانية لو متاح
+                document.getElementById('bTime').innerText = data.timeDiff ? `(${data.timeDiff}ms)` : "";
+                buzzerOverlay.style.display = 'flex';
+                // إيقاف التايمر برمجياً هنا لو عندك Timer Logic
+            } else {
+                buzzerOverlay.style.display = 'none'; // لو الأدمن صفر البازر
+            }
+        });
+
+        // 3. استماع لحظي للموقت (الأدمن بيبعته كل ثانية)
+        onValue(ref(db, 'timer_value'), (snapshot) => {
+            const time = snapshot.val();
+            if(time !== null) {
+                timerDisplay.innerText = time;
+                // صوت "تك تك" لو التايمر بيقل عن 5 ثواني
+            }
+        });
+
+        // 4. استماع لحظي لأسماء الفرق في الماتش الحالي
+        onValue(ref(db, 'active_match'), (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                document.getElementById('teamANameDisp').innerText = data.teamA.name;
+                document.getElementById('teamBNameDisp').innerText = data.teamB.name;
+            }
+        });
+
+        // 5. استماع لحظي للاحتفال (لما فريق يصعد)
+        onValue(ref(db, 'celebration_trigger'), (snapshot) => {
+            if (snapshot.val() === true) {
+                confettiOverlay.style.display = 'block';
+                // تشغيل صوت احتفال
+                setTimeout(() => confettiOverlay.style.display = 'none', 5000);
+            }
+        });
+
     </script>
 </body>
 </html>
