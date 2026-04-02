@@ -2,21 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة تحكم العمالقة 🕹️</title>
+    <title>لوحة تحكم العمالقة - Control Center 🕹️</title>
     <style>
         @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
         @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
 
         :root {
             --primary: #3b82f6;
-            --success: #22c55e;
+            --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --bg: #0f172a;
         }
 
         body {
-            background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif;
-            margin: 0; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            background: var(--bg); color: white; font-family: sans-serif;
+            margin: 0; padding: 20px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px;
         }
 
         .card {
@@ -24,85 +25,90 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        h2 { font-family: 'Galaxy'; color: #facc15; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        h2 { font-family: 'Galaxy'; color: #facc15; margin-top: 0; border-bottom: 1px solid #334155; }
 
-        input, select, textarea {
-            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
-            border: 1px solid #334155; background: #1e293b; color: white; box-sizing: border-box;
+        label { display: block; margin: 10px 0 5px; color: #94a3b8; }
+        select, input, textarea {
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155;
+            background: #1e293b; color: white; font-size: 1rem; box-sizing: border-box;
         }
 
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .btn {
-            padding: 15px 25px; border: none; border-radius: 10px; cursor: pointer;
-            font-family: 'Dahka'; font-size: 1.2rem; transition: 0.3s; width: 100%; margin-top: 10px;
+            padding: 15px; border: none; border-radius: 10px; cursor: pointer;
+            font-family: 'Dahka'; font-size: 1.2rem; transition: 0.3s;
         }
 
-        .btn-open { background: var(--success); color: white; }
-        .btn-close { background: var(--danger); color: white; }
-        .btn-update { background: var(--primary); color: white; }
+        .btn-blue { background: var(--primary); color: white; }
+        .btn-green { background: var(--success); color: white; }
+        .btn-red { background: var(--danger); color: white; }
+        .btn-gold { background: var(--warning); color: white; }
 
-        .status-badge {
-            padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; float: left;
-        }
-        .online { background: var(--success); }
-
-        .player-list { list-style: none; padding: 0; }
-        .player-list li { background: #1e293b; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; }
+        .score-control { display: flex; align-items: center; justify-content: space-between; background: #000; padding: 10px; border-radius: 10px; margin-top: 10px; }
+        .score-val { font-size: 2rem; font-family: 'Dahka'; color: #facc15; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h2>التحكم اللحظي ⚡</h2>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn btn-open" onclick="updateBuzzer('open')">فتح البازر ✅</button>
-            <button class="btn btn-close" onclick="resetBuzzer()">تصفير البازر ❌</button>
-        </div>
+        <h2>إعدادات المباراة ⚔️</h2>
+        <label>اختر فريق اليمين (A):</label>
+        <select id="selectA"></select>
+        
+        <label>اختر فريق اليسار (B):</label>
+        <select id="selectB"></select>
+        
+        <button class="btn btn-blue" style="width:100%; margin-top:15px;" onclick="startMatch()">بدء المباراة وتحديث الشاشات 🔄</button>
 
-        <div style="margin-top: 30px;">
-            <label>الموقت (بالثواني):</label>
-            <input type="number" id="timerInput" value="30">
-            <button class="btn btn-update" onclick="startTimer()">بدء العد التنازلي ⏱️</button>
+        <hr style="margin: 25px 0; border: 0.5px solid #334155;">
+        
+        <h2>لوحة الدرجات 📈</h2>
+        <div class="score-control">
+            <span id="labelA">فريق A</span>
+            <button class="btn btn-red" onclick="changeScore('teamA', -5)">-</button>
+            <span class="score-val" id="valA">0</span>
+            <button class="btn btn-green" onclick="changeScore('teamA', 5)">+</button>
         </div>
-
-        <div style="margin-top: 30px;">
-            <button class="btn" style="background: #a855f7;" onclick="triggerCelebration()">تشغيل الاحتفال 🎊</button>
+        <div class="score-control" style="margin-top:15px;">
+            <span id="labelB">فريق B</span>
+            <button class="btn btn-red" onclick="changeScore('teamB', -5)">-</button>
+            <span class="score-val" id="valB">0</span>
+            <button class="btn btn-green" onclick="changeScore('teamB', 5)">+</button>
         </div>
     </div>
 
     <div class="card">
-        <h2>إرسال السؤال ❓</h2>
-        <input type="text" id="qCategory" placeholder="المجال (مثل: لغة عربية)">
-        <textarea id="qText" rows="3" placeholder="اكتب نص السؤال هنا..."></textarea>
-        <button class="btn btn-update" onclick="sendQuestion()">تحديث الشاشة بالسؤال 🚀</button>
+        <h2>التحكم اللحظي والأسئلة 🕹️</h2>
         
-        <div style="margin-top: 20px; padding: 15px; background: #000; border-radius: 10px;">
-            <p style="color: #facc15; margin: 0;">من ضغط أولاً؟</p>
-            <h1 id="winnerDisplay" style="font-family: 'Dahka'; margin: 10px 0;">-- لا أحد --</h1>
-        </div>
-    </div>
+        <label>نص السؤال:</label>
+        <textarea id="qText" rows="2" placeholder="اكتب السؤال هنا..."></textarea>
+        <button class="btn btn-blue" style="width:100%;" onclick="sendQ()">إرسال السؤال للشاشة 🚀</button>
 
-    <div class="card" style="grid-column: 1 / span 2;">
-        <h2>إعدادات المباراة النشطة ⚔️</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div>
-                <label>اسم فريق A:</label>
-                <input type="text" id="teamAName" value="الصقور">
-                <label>لعيبة فريق A (افصل بينهم بفاصلة ,):</label>
-                <input type="text" id="teamAPlayers" value="أحمد, محمد, علي, محمود">
-            </div>
-            <div>
-                <label>اسم فريق B:</label>
-                <input type="text" id="teamBName" value="الوحوش">
-                <label>لعيبة فريق B (افصل بينهم بفاصلة ,):</label>
-                <input type="text" id="teamBPlayers" value="سعد, فهد, جابر, سالم">
-            </div>
+        <div class="btn-group">
+            <button class="btn btn-green" onclick="setBuzzer('open')">فتح البازر ✅</button>
+            <button class="btn btn-red" onclick="resetBuzzer()">قفل وتصفير ❌</button>
         </div>
-        <button class="btn btn-update" onclick="updateMatch()">تحديث المباراة واللعيبة لجميع المتسابقين 🔄</button>
+
+        <div class="btn-group">
+            <button class="btn btn-gold" onclick="setWheel('show')">إظهار العجلة 🎡</button>
+            <button class="btn btn-blue" onclick="setWheel('hide')">إخفاء العجلة 📖</button>
+        </div>
+
+        <div style="margin-top:20px;">
+            <label>المؤقت (ثانية):</label>
+            <input type="number" id="timerIn" value="30">
+            <button class="btn btn-blue" style="width:100%; margin-top:5px;" onclick="runTimer()">بدء التايمر ⏱️</button>
+        </div>
+
+        <div style="background:#000; padding:15px; border-radius:10px; margin-top:20px; border: 1px solid #facc15;">
+            <p style="margin:0; color:#94a3b8;">الفائز بالبازر حالياً:</p>
+            <h1 id="winnerName" style="font-family:'Dahka'; margin:5px 0; color:#facc15; text-align:center;">---</h1>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
@@ -115,67 +121,72 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- وظائف التحكم ---
+        let teamsList = {};
 
-        // 1. فتح البازر
-        window.updateBuzzer = function(status) {
-            set(ref(db, 'buzzer_status'), status);
-        }
+        // 1. جلب الفرق من مسار teams اللي في صورتك
+        onValue(ref(db, 'teams'), (snap) => {
+            const data = snap.val();
+            if(data) {
+                teamsList = data;
+                let options = '<option value="" disabled selected>اختر فريقاً</option>';
+                for(let name in data) options += `<option value="${name}">${name}</option>`;
+                document.getElementById('selectA').innerHTML = options;
+                document.getElementById('selectB').innerHTML = options;
+            }
+        });
 
-        // 2. تصفير البازر (عشان سؤال جديد)
-        window.resetBuzzer = function() {
+        // 2. بدء المباراة
+        window.startMatch = function() {
+            const a = document.getElementById('selectA').value;
+            const b = document.getElementById('selectB').value;
+            if(!a || !b || a===b) return alert("اختر فريقين مختلفين!");
+
+            set(ref(db, 'active_match'), {
+                teamA: { name: a, players: teamsList[a].players, score: 0 },
+                teamB: { name: b, players: teamsList[b].players, score: 0 }
+            });
+            alert("تم إطلاق الماتش!");
+        };
+
+        // 3. تحديث الدرجات
+        window.changeScore = function(teamKey, amount) {
+            const scoreRef = ref(db, `active_match/${teamKey}/score`);
+            onValue(scoreRef, (snap) => {
+                const current = snap.val() || 0;
+                set(scoreRef, current + amount);
+            }, { onlyOnce: true });
+        };
+
+        // 4. البازر والأسئلة
+        window.setBuzzer = (status) => set(ref(db, 'buzzer_status'), status);
+        window.resetBuzzer = () => {
             set(ref(db, 'buzzer_status'), 'locked');
-            set(ref(db, 'buzzer_winner'), ""); // مسح الفائز من الشاشة
-        }
+            set(ref(db, 'buzzer_winner'), "");
+        };
+        window.sendQ = () => set(ref(db, 'current_question'), { text: document.getElementById('qText').value });
+        window.setWheel = (status) => set(ref(db, 'wheel_status'), status);
 
-        // 3. تحديث السؤال
-        window.sendQuestion = function() {
-            const text = document.getElementById('qText').value;
-            const category = document.getElementById('qCategory').value;
-            set(ref(db, 'current_question'), { text, category });
-        }
-
-        // 4. تحديث الماتش واللعيبة
-        window.updateMatch = function() {
-            const teamA = {
-                name: document.getElementById('teamAName').value,
-                players: document.getElementById('teamAPlayers').value.split(',').map(s => s.trim())
-            };
-            const teamB = {
-                name: document.getElementById('teamBName').value,
-                players: document.getElementById('teamBPlayers').value.split(',').map(s => s.trim())
-            };
-            set(ref(db, 'active_match'), { teamA, teamB });
-            alert("تم تحديث بيانات المباراة!");
-        }
-
-        // 5. الموقت
-        let timerInterval;
-        window.startTimer = function() {
-            let timeLeft = parseInt(document.getElementById('timerInput').value);
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                set(ref(db, 'timer_value'), timeLeft);
-                if (timeLeft <= 0) clearInterval(timerInterval);
-                timeLeft--;
+        // 5. التايمر
+        window.runTimer = function() {
+            let time = parseInt(document.getElementById('timerIn').value);
+            let interval = setInterval(() => {
+                set(ref(db, 'timer_value'), time);
+                if(time <= 0) clearInterval(interval);
+                time--;
             }, 1000);
-        }
+        };
 
-        // 6. الاحتفال
-        window.triggerCelebration = function() {
-            set(ref(db, 'celebration_trigger'), true);
-            setTimeout(() => set(ref(db, 'celebration_trigger'), false), 3000);
-        }
-
-        // 7. عرض الفائز في صفحة الأدمن فوراً
-        onValue(ref(db, 'buzzer_winner'), (snapshot) => {
-            const data = snapshot.val();
-            if (data && data.name) {
-                document.getElementById('winnerDisplay').innerText = data.name + " (" + data.team + ")";
-                document.getElementById('winnerDisplay').style.color = "#22c55e";
-            } else {
-                document.getElementById('winnerDisplay').innerText = "-- لا أحد --";
-                document.getElementById('winnerDisplay').style.color = "white";
+        // 6. مراقبة الفائز ودرجات الفريقين في الأدمن
+        onValue(ref(db, 'buzzer_winner'), (snap) => {
+            document.getElementById('winnerName').innerText = snap.val() ? snap.val().name : "---";
+        });
+        onValue(ref(db, 'active_match'), (snap) => {
+            const data = snap.val();
+            if(data) {
+                document.getElementById('labelA').innerText = data.teamA.name;
+                document.getElementById('labelB').innerText = data.teamB.name;
+                document.getElementById('valA').innerText = data.teamA.score;
+                document.getElementById('valB').innerText = data.teamB.score;
             }
         });
     </script>
