@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>القيادة المركزية | العمالقة 🕹️</title>
+    <title>غرفة عمليات العمالقة | Control Center 🕹️</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* الـ 6 خطوط الأصلية كاملة */
         @font-face { font-family: 'Amira'; src: url('اميرة.ttf'); }
         @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
         @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
+        @font-face { font-family: 'Kufa'; src: url('كوفا.ttf'); }
+        @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
         @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
 
         :root {
-            --neon-red: #ff003c; --neon-gold: #facc15; --bg-dark: #0a0505;
+            --neon-red: #ff003c; --neon-gold: #facc15; --neon-brown: #8b4513;
+            --neon-brown-light: #d2691e; --bg-dark: #0a0505;
         }
 
         body {
@@ -21,115 +25,170 @@
             color: white; font-family: 'Cairo', sans-serif; min-height: 100vh;
         }
 
-        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .active-tab { border-bottom: 4px solid var(--neon-red); color: var(--neon-red); }
-        .team-box.selected { border: 2px solid var(--neon-gold); background: rgba(250, 204, 21, 0.2); transform: scale(1.05); }
+        .glass {
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 0, 60, 0.2); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .main-title { font-family: 'Amira', sans-serif; color: var(--neon-gold); text-shadow: 0 0 15px rgba(250, 204, 21, 0.5); }
+        .war-label { font-size: 0.8rem; font-weight: 900; letter-spacing: 2px; color: var(--neon-brown-light); text-transform: uppercase; }
+        .instruction-card { border-right: 4px solid var(--neon-brown); font-family: 'Kufa', sans-serif; }
         
-        /* انيميشن النبض للبازر */
-        .strike-alert { animation: strike-pulse 0.5s infinite alternate; border: 3px solid var(--neon-red) !important; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+        .team-box {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px; cursor: pointer; transition: 0.3s;
+            font-family: 'Belabelo', sans-serif; font-size: 0.9rem; text-align: center;
+        }
+        .team-box.selected { border-color: var(--neon-gold); background: rgba(250, 204, 21, 0.2); color: var(--neon-gold); transform: scale(1.05); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .active-tab { border-bottom: 4px solid var(--neon-red); color: var(--neon-red); }
+
+        .timer-svg { transform: rotate(-90deg); }
+        .timer-circle { fill: none; stroke: var(--neon-gold); stroke-width: 8; stroke-dasharray: 565; transition: 1s linear; }
+        #timer-text { font-family: 'DGRawnaq', sans-serif; text-shadow: 0 0 20px rgba(250, 204, 21, 0.3); }
+
+        .buzzer-strike { border: 2px solid var(--neon-red) !important; background: rgba(255, 0, 60, 0.1) !important; animation: strike-pulse 0.5s infinite alternate; }
         @keyframes strike-pulse { from { box-shadow: 0 0 10px var(--neon-red); } to { box-shadow: 0 0 30px var(--neon-red); } }
+        
+        .btn-action:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="p-4 lg:p-8">
 
-    <header class="flex justify-between items-center mb-6 glass p-6 rounded-2xl">
+    <header class="flex justify-between items-center mb-6 glass p-6 rounded-2xl border-b-2 border-red-600/50">
         <div class="flex items-center gap-4">
-            <h1 style="font-family: 'Amira';" class="text-4xl text-yellow-500">لوحة تحكم العمالقة</h1>
+            <div class="w-14 h-14 bg-gradient-to-br from-red-600 to-red-900 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2"/></svg>
+            </div>
+            <h1 class="main-title text-4xl">غرفة العمليات</h1>
         </div>
-        <div class="flex gap-4">
-            <button onclick="resetFullMatch()" class="bg-red-900/50 text-red-400 px-4 py-2 rounded-lg text-xs font-bold border border-red-500/30">إنهاء المباراة وتصفير الساحة ⚠️</button>
-            <div id="status" class="bg-green-500/10 text-green-400 px-4 py-2 rounded-full border border-green-500/30 text-xs font-black">RADAR ACTIVE</div>
+        <div id="status" class="flex items-center gap-2 bg-green-500/10 text-green-400 px-4 py-2 rounded-full border border-green-500/30 text-xs font-black">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span> RADAR ACTIVE
         </div>
     </header>
 
     <nav class="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-        <button onclick="openTab('live')" id="tab-live" class="pb-3 px-6 font-bold active-tab">الساحة</button>
-        <button onclick="openTab('qbank')" id="tab-qbank" class="pb-3 px-6 font-bold text-slate-500">الأسئلة</button>
-        <button onclick="openTab('judge')" id="tab-judge" class="pb-3 px-6 font-bold text-slate-500 relative">
-            التحكيم
-            <span id="judge-badge" class="hidden absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
+        <button onclick="openTab('live')" id="tab-live" class="pb-3 px-6 font-bold active-tab whitespace-nowrap">المباراة المباشرة</button>
+        <button onclick="openTab('qbank')" id="tab-qbank" class="pb-3 px-6 font-bold text-slate-500 whitespace-nowrap">بنك الأسئلة 📂</button>
+        <button onclick="openTab('judge')" id="tab-judge" class="pb-3 px-6 font-bold text-slate-500 whitespace-nowrap relative">
+            منطقة التحكيم
+            <span id="judge-notif" class="hidden absolute top-0 right-1 w-3 h-3 bg-red-500 rounded-full animate-bounce"></span>
         </button>
+        <button onclick="openTab('stats')" id="tab-stats" class="pb-3 px-6 font-bold text-slate-500 whitespace-nowrap">إحصائيات النخبة</button>
+        <a href="bazel.html" target="_blank" class="pb-3 px-6 font-bold text-red-400 hover:text-white mr-auto flex items-center gap-2">اختبار البازر ⚡</a>
     </nav>
 
-    <section id="live" class="tab-content block space-y-6">
+    <section id="live" class="tab-content active space-y-6">
+        <div class="instruction-card bg-slate-900/50 p-4 rounded-lg text-amber-100">
+            💡 إرشادات: اختر الفريقين ثم "إطلاق المباراة". يمكنك تعديل النقاط يدوياً من أيقونات (+) و (-).
+        </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 glass p-6 rounded-2xl">
-                <h3 class="text-red-500 font-black mb-4 uppercase tracking-widest text-sm">رادار الفرق المتصلة</h3>
-                <div class="grid grid-cols-4 md:grid-cols-6 gap-3" id="teamsGrid"></div>
-                <div class="mt-8 flex gap-4 justify-center">
-                    <button onclick="deployMatch()" class="bg-red-600 hover:bg-red-700 text-white px-12 py-4 rounded-xl font-black text-xl transition-all shadow-xl">إطلاق المباراة 🚀</button>
+                <h3 class="war-label mb-4 text-red-500">رادار الفرق المتصلة</h3>
+                <div class="team-grid" id="teamsGrid"></div>
+                
+                <div id="matchTeamsDisplay" class="mt-8 grid grid-cols-2 gap-4 hidden">
+                    <div class="bg-black/40 p-4 rounded-xl border border-red-500/30">
+                        <p id="matchNameA" class="font-black text-yellow-500 mb-2">---</p>
+                        <div class="flex gap-2">
+                            <button onclick="manualScore('teamA', 5)" class="bg-green-600 px-3 rounded">+</button>
+                            <button onclick="manualScore('teamA', -5)" class="bg-red-600 px-3 rounded">-</button>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-xl border border-blue-500/30">
+                        <p id="matchNameB" class="font-black text-blue-400 mb-2">---</p>
+                        <div class="flex gap-2">
+                            <button onclick="manualScore('teamB', 5)" class="bg-green-600 px-3 rounded">+</button>
+                            <button onclick="manualScore('teamB', -5)" class="bg-red-600 px-3 rounded">-</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-center gap-4">
+                    <button onclick="deployMatch()" class="bg-red-600 text-white px-10 py-4 rounded-xl font-black text-xl shadow-lg hover:bg-red-500 transition-all">إطلاق المباراة 🚀</button>
+                    <button onclick="resetMatch()" class="bg-slate-800 text-slate-400 px-4 py-4 rounded-xl font-bold border border-slate-700">تصفير الساحة 🧹</button>
                 </div>
             </div>
-
+            
             <div class="space-y-6">
-                <div class="glass p-6 rounded-2xl text-center">
-                    <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-4" style="font-family: 'DGRawnaq';">30</div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="controlTimer('start')" class="bg-green-600/20 text-green-400 py-2 rounded-lg border border-green-500/30 font-bold">بدء</button>
-                        <button onclick="controlTimer('pause')" class="bg-yellow-600/20 text-yellow-400 py-2 rounded-lg border border-yellow-500/30 font-bold">وقف</button>
-                        <button onclick="controlTimer('reset')" class="bg-red-600/20 text-red-400 py-2 rounded-lg border border-red-500/30 font-bold">صفر</button>
+                <div class="glass p-6 rounded-2xl text-center border-t-4 border-yellow-500">
+                    <div class="relative w-44 h-44 mx-auto mb-4 flex items-center justify-center">
+                        <svg class="timer-svg w-full h-full" viewBox="0 0 200 200">
+                            <circle class="timer-circle" id="circleProgress" cx="100" cy="100" r="90"></circle>
+                        </svg>
+                        <div id="timer-text" class="absolute text-4xl font-bold text-yellow-500">00:30</div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="controlTimer('start')" class="bg-green-600/30 text-green-400 py-3 rounded-xl border border-green-500/50 font-black">بدء الهجوم</button>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="controlTimer('pause')" class="bg-yellow-600/20 text-yellow-400 py-2 rounded-lg border border-yellow-500/30">توقف</button>
+                            <button onclick="controlTimer('reset')" class="bg-red-600/20 text-red-400 py-2 rounded-lg border border-red-500/30">إعادة</button>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="glass p-4 rounded-2xl space-y-4" id="manualScoreControls">
-                    <p class="text-center text-xs text-slate-400">تعديل النقاط يدوياً</p>
-                    <div class="flex justify-between items-center" id="teamA_row">
-                        <span id="labelA" class="font-bold text-sm">--</span>
-                        <div class="flex gap-2">
-                            <button onclick="adjustScore('teamA', 5)" class="bg-blue-600 w-8 h-8 rounded">+</button>
-                            <button onclick="adjustScore('teamA', -5)" class="bg-slate-700 w-8 h-8 rounded">-</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center" id="teamB_row">
-                        <span id="labelB" class="font-bold text-sm">--</span>
-                        <div class="flex gap-2">
-                            <button onclick="adjustScore('teamB', 5)" class="bg-blue-600 w-8 h-8 rounded">+</button>
-                            <button onclick="adjustScore('teamB', -5)" class="bg-slate-700 w-8 h-8 rounded">-</button>
-                        </div>
-                    </div>
+                <div class="glass p-6 rounded-2xl flex flex-col gap-3">
+                    <button onclick="spinWheel()" class="bg-yellow-500 text-black py-4 rounded-xl font-black shadow-[0_0_20px_rgba(250,204,21,0.4)]">إظهار/إخفاء العجلة 🎡</button>
+                    <button onclick="triggerWheelSpin()" class="bg-purple-600 text-white py-3 rounded-xl font-black text-sm">تدوير العجلة الآن! 🌀</button>
+                    <button id="broadcastAnsBtn" onclick="broadcastAnswer()" class="bg-red-600 text-white py-4 rounded-xl font-black hidden">كشف الإجابة للمشاهدين 👁️</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="qbank" class="tab-content hidden space-y-6">
+    <section id="judge" class="tab-content space-y-6">
+        <div id="buzzerPanel" class="glass p-12 rounded-[2.5rem] text-center transition-all duration-300">
+            <div id="waitingState">
+                <div class="w-20 h-20 border-8 border-slate-800 border-t-red-500 rounded-full animate-spin mx-auto mb-6"></div>
+                <p class="text-slate-500 text-2xl font-black">انتظار إشارة العمالقة...</p>
+            </div>
+            <div id="strikeState" class="hidden">
+                <h3 class="war-label text-red-500 mb-4 animate-pulse">STRIKE DETECTED ⚠️</h3>
+                <div class="flex items-center justify-center gap-6 mb-6">
+                    <img id="winnerPhoto" class="w-28 h-28 rounded-full border-4 border-white/10" src="">
+                    <div class="text-right">
+                        <h2 id="winnerName" class="text-5xl font-black" style="font-family: 'Belabelo';">---</h2>
+                        <p id="winnerTeam" class="text-2xl text-red-400 font-bold">---</p>
+                    </div>
+                </div>
+                <div class="bg-red-950/40 p-4 rounded-xl mb-6 text-right border border-red-500/20">
+                    <p class="text-red-400 text-sm mb-1">الإجابة النموذجية:</p>
+                    <p id="adminAnswerView" class="text-2xl font-bold text-green-400">---</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="handleJudge(true)" class="bg-green-600 py-6 rounded-xl font-black text-2xl shadow-lg hover:bg-green-500">صح ✅</button>
+                    <button onclick="handleJudge(false)" class="bg-red-600 py-6 rounded-xl font-black text-2xl shadow-lg hover:bg-red-500">خطأ ❌</button>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="resetBuzzers('open')" class="glass py-4 rounded-xl border-2 border-green-500/50 text-green-400 font-black">فتح البازرات 🔓</button>
+            <button onclick="resetBuzzers('locked')" class="glass py-4 rounded-xl border-2 border-red-500/50 text-red-400 font-black">إغلاق البازرات (LOCK) 🔒</button>
+        </div>
+    </section>
+
+    <section id="qbank" class="tab-content space-y-6">
         <div class="glass p-6 rounded-2xl">
-            <select id="fileSelector" class="w-full bg-slate-900 border border-red-500/30 p-4 rounded-xl text-yellow-400 font-bold mb-6" onchange="loadQuestionsFromFile()">
-                <option value="علوم">بنك الأسئلة: العلوم والتكنولوجيا 🧪</option>
-                <option value="ثقافة">بنك الأسئلة: الثقافة العامة 🌍</option>
-            </select>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="war-label text-amber-600">قاعدة بيانات الأسئلة</h3>
+                <select id="fileSelector" class="bg-slate-900 border border-red-500/30 p-2 rounded-lg text-yellow-400 font-bold" onchange="loadQuestionsFromFile()">
+                    <option value="علوم">ملف العلوم 🧪</option>
+                    <option value="ثقافة">ملف الثقافة العامة 🌍</option>
+                    <option value="رياضيات">ملف الرياضيات 📐</option>
+                </select>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="qBankGrid"></div>
         </div>
     </section>
 
-    <section id="judge" class="tab-content hidden">
-        <div id="buzzerPanel" class="glass p-10 rounded-[3rem] text-center transition-all duration-500">
-            <div id="waitingState" class="py-10">
-                <div class="w-16 h-16 border-4 border-slate-700 border-t-red-500 rounded-full animate-spin mx-auto mb-4"></div>
-                <p class="text-slate-500 font-bold">في انتظار ضغطة العمالقة...</p>
-            </div>
-            
-            <div id="strikeState" class="hidden">
-                <div class="bg-yellow-500 text-black inline-block px-6 py-1 rounded-full font-black text-sm mb-4">تم الضغط!</div>
-                <h2 id="winnerName" class="text-6xl font-black mb-2" style="font-family: 'Belabelo';">---</h2>
-                <p id="winnerTeam" class="text-2xl text-red-500 font-bold mb-6">---</p>
-                
-                <div class="bg-black/40 p-6 rounded-2xl mb-8 border border-white/5">
-                    <p class="text-xs text-slate-400 mb-2">الإجابة الصحيحة:</p>
-                    <p id="adminAnswerView" class="text-3xl font-bold text-green-400">---</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-6">
-                    <button onclick="handleJudge(true)" class="bg-green-600 hover:bg-green-500 py-8 rounded-2xl font-black text-3xl shadow-xl transition-all active:scale-95">صح ✅</button>
-                    <button onclick="handleJudge(false)" class="bg-red-600 hover:bg-red-500 py-8 rounded-2xl font-black text-3xl shadow-xl transition-all active:scale-95">خطأ ❌</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-3 gap-4 mt-8">
-            <button onclick="toggleAnswer()" class="bg-blue-600 py-4 rounded-xl font-bold">كشف/إخفاء الإجابة 👁️</button>
-            <button onclick="toggleWheel()" class="bg-purple-600 py-4 rounded-xl font-bold">إظهار العجلة 🎡</button>
-            <button onclick="triggerSpin()" class="bg-yellow-500 text-black py-4 rounded-xl font-black">تدوير العجلة الآن! 🌀</button>
+    <section id="stats" class="tab-content space-y-6">
+        <div class="glass p-6 rounded-2xl">
+            <h3 class="war-label mb-4 text-yellow-400">قائمة النخبة (Top 5)</h3>
+            <div id="teamsLeaderboard" class="space-y-2"></div>
         </div>
     </section>
 
@@ -149,19 +208,19 @@
 
         let selectedTeams = [];
         let allTeams = {};
-        let currentQ = null;
+        let currentQuestion = null;
         let timeLeft = 30;
-        let totalQTime = 30; // لتصحيح انيميشن الدائرة
+        let totalQTime = 30;
         let timerInterval = null;
 
-        // 1. إدارة الفرق والرادار
+        // 1. مراقبة الفرق
         onValue(ref(db, 'teams'), (snap) => {
             allTeams = snap.val() || {};
             const grid = document.getElementById('teamsGrid');
             grid.innerHTML = '';
             Object.keys(allTeams).forEach(name => {
                 const box = document.createElement('div');
-                box.className = `glass p-4 rounded-xl text-center cursor-pointer font-bold team-box ${selectedTeams.includes(name) ? 'selected' : ''}`;
+                box.className = `team-box ${selectedTeams.includes(name) ? 'selected' : ''}`;
                 box.innerText = name;
                 box.onclick = () => {
                     if(selectedTeams.includes(name)) selectedTeams = selectedTeams.filter(t => t !== name);
@@ -170,6 +229,7 @@
                 };
                 grid.appendChild(box);
             });
+            updateLeaderboard();
         });
 
         function updateRadarUI() {
@@ -179,83 +239,94 @@
         }
 
         window.deployMatch = () => {
-            if(selectedTeams.length < 2) return alert("يجب اختيار فريقين للمواجهة!");
-            set(ref(db, 'active_match'), {
+            if(selectedTeams.length < 2) return alert("اختر فريقين أولاً!");
+            const matchData = {
                 teamA: { name: selectedTeams[0], score: allTeams[selectedTeams[0]].score || 0 },
                 teamB: { name: selectedTeams[1], score: allTeams[selectedTeams[1]].score || 0 }
-            });
-            document.getElementById('labelA').innerText = selectedTeams[0];
-            document.getElementById('labelB').innerText = selectedTeams[1];
+            };
+            set(ref(db, 'active_match'), matchData);
+            document.getElementById('matchTeamsDisplay').classList.remove('hidden');
+            document.getElementById('matchNameA').innerText = selectedTeams[0];
+            document.getElementById('matchNameB').innerText = selectedTeams[1];
             openTab('qbank');
         };
 
-        // 2. إدارة الأسئلة
-        const questions = {
-            "علوم": [{t:"ما هو العنصر الأثقل؟", a:"اليورانيوم", s:15}, {t:"كم عدد الكواكب؟", a:"8", s:10}],
-            "ثقافة": [{t:"من هو مؤسس الدولة الأموية؟", a:"معاوية بن أبي سفيان", s:20}]
+        // 2. الأسئلة
+        const questionFiles = {
+            "علوم": [{ text: "ما هو أسرع كوكب؟", answer: "عطارد", time: 15 }, { text: "غاز التنفس؟", answer: "أكسجين", time: 20 }],
+            "رياضيات": [{ text: "12 * 12؟", answer: "144", time: 10 }],
+            "ثقافة": [{ text: "عاصمة اليابان؟", answer: "طوكيو", time: 15 }]
         };
 
         window.loadQuestionsFromFile = () => {
             const file = document.getElementById('fileSelector').value;
-            const grid = document.getElementById('qBankGrid');
-            grid.innerHTML = '';
-            questions[file].forEach(q => {
-                const b = document.createElement('button');
-                b.className = "glass p-4 text-right hover:border-yellow-500 transition-all font-bold";
-                b.innerText = q.t;
-                b.onclick = () => {
-                    currentQ = q;
-                    totalQTime = q.s;
-                    timeLeft = q.s;
-                    set(ref(db, 'current_question'), { text: q.t, answer: q.a });
-                    set(ref(db, 'buzzer_winner'), ""); 
+            const qGrid = document.getElementById('qBankGrid');
+            qGrid.innerHTML = '';
+            questionFiles[file].forEach((q, i) => {
+                const btn = document.createElement('button');
+                btn.className = "glass p-4 rounded-xl text-right hover:border-red-500 font-bold flex gap-3";
+                btn.innerHTML = `<span class='text-red-400'>${i+1}</span> ${q.text}`;
+                btn.onclick = () => {
+                    currentQuestion = q;
+                    totalQTime = q.time || 30;
+                    timeLeft = totalQTime;
+                    set(ref(db, 'current_question'), { text: q.text, answer: q.answer });
+                    set(ref(db, 'timer_total_ref'), totalQTime); // لإصلاح انيميشن الدائرة
+                    set(ref(db, 'buzzer_winner'), "");
                     set(ref(db, 'buzzer_status'), 'open');
                     set(ref(db, 'show_answer'), false);
-                    document.getElementById('adminAnswerView').innerText = q.a;
+                    document.getElementById('adminAnswerView').innerText = q.answer;
+                    document.getElementById('broadcastAnsBtn').classList.remove('hidden');
                     controlTimer('start');
                     openTab('judge');
                 };
-                grid.appendChild(b);
+                qGrid.appendChild(btn);
             });
         };
 
-        // 3. التحكم بالتايمر
+        // 3. التايمر
         window.controlTimer = (action) => {
-            clearInterval(timerInterval);
             if(action === 'start') {
+                if(timerInterval) clearInterval(timerInterval);
                 timerInterval = setInterval(() => {
                     if(timeLeft > 0) {
                         timeLeft--;
-                        document.getElementById('timer-display').innerText = timeLeft;
+                        updateTimerUI();
                         set(ref(db, 'timer_value'), timeLeft);
-                        // إرسال الـ TotalTime لتصحيح انيميشن الدائرة في الشاشة الرئيسية
-                        set(ref(db, 'timer_total_ref'), totalQTime);
                     } else { clearInterval(timerInterval); }
                 }, 1000);
+            } else if(action === 'pause') {
+                clearInterval(timerInterval);
             } else if(action === 'reset') {
+                clearInterval(timerInterval);
                 timeLeft = totalQTime;
-                document.getElementById('timer-display').innerText = timeLeft;
+                updateTimerUI();
                 set(ref(db, 'timer_value'), timeLeft);
             }
         };
 
-        // 4. نظام التحكيم المتطور
+        function updateTimerUI() {
+            document.getElementById('timer-text').innerText = `00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
+            document.getElementById('circleProgress').style.strokeDashoffset = 565 - (timeLeft/totalQTime)*565;
+        }
+
+        // 4. التحكيم
         onValue(ref(db, 'buzzer_winner'), (snap) => {
             const w = snap.val();
-            const badge = document.getElementById('judge-badge');
             if(w && w.name) {
                 document.getElementById('winnerName').innerText = w.name;
                 document.getElementById('winnerTeam').innerText = w.team;
+                document.getElementById('winnerPhoto').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${w.name}`;
                 document.getElementById('waitingState').classList.add('hidden');
                 document.getElementById('strikeState').classList.remove('hidden');
-                document.getElementById('buzzerPanel').classList.add('strike-alert');
-                badge.classList.remove('hidden');
+                document.getElementById('buzzerPanel').classList.add('buzzer-strike');
+                document.getElementById('judge-notif').classList.remove('hidden');
                 controlTimer('pause');
             } else {
                 document.getElementById('waitingState').classList.remove('hidden');
                 document.getElementById('strikeState').classList.add('hidden');
-                document.getElementById('buzzerPanel').classList.remove('strike-alert');
-                badge.classList.add('hidden');
+                document.getElementById('buzzerPanel').classList.remove('buzzer-strike');
+                document.getElementById('judge-notif').classList.add('hidden');
             }
         });
 
@@ -266,50 +337,59 @@
 
             if(isCorrect) {
                 const matchSnap = await get(ref(db, 'active_match'));
-                const m = matchSnap.val();
-                const teamKey = (winner.team === m.teamA.name) ? 'teamA' : 'teamB';
+                const match = matchSnap.val();
+                const teamKey = (winner.team === match.teamA.name) ? 'teamA' : 'teamB';
                 runTransaction(ref(db, `active_match/${teamKey}/score`), s => (s||0) + 10);
                 runTransaction(ref(db, `teams/${winner.team}/score`), s => (s||0) + 10);
             }
-            // أتمتة: بعد التحكيم، صفر البازر وافتح السؤال التالي
-            set(ref(db, 'buzzer_winner'), "");
-            set(ref(db, 'buzzer_status'), 'locked');
-            set(ref(db, 'show_answer'), false);
-            openTab('qbank');
+            resetBuzzers('locked'); // قفل البازر بعد الإجابة لمنع الفوضى
         };
 
-        // 5. ميزات إضافية
-        window.adjustScore = (teamKey, amount) => {
+        window.resetBuzzers = (status) => {
+            set(ref(db, 'buzzer_winner'), "");
+            set(ref(db, 'buzzer_status'), status);
+        };
+
+        window.manualScore = (teamKey, amount) => {
             runTransaction(ref(db, `active_match/${teamKey}/score`), s => (s||0) + amount);
         };
 
-        window.toggleAnswer = () => {
-            get(ref(db, 'show_answer')).then(s => set(ref(db, 'show_answer'), !s.val()));
-        };
-
-        window.toggleWheel = () => {
+        window.spinWheel = () => {
             get(ref(db, 'wheel_status')).then(s => set(ref(db, 'wheel_status'), s.val()==='show'?'hide':'show'));
         };
 
-        window.triggerSpin = () => {
-            set(ref(db, 'wheel_trigger'), true); // الأمر الفعلي للدوران
+        window.triggerWheelSpin = () => {
+            set(ref(db, 'wheel_trigger'), true);
         };
 
-        window.resetFullMatch = () => {
-            if(confirm("هل أنت متأكد؟ سيتم حذف نتائج المباراة الحالية!")) {
+        window.broadcastAnswer = () => {
+            get(ref(db, 'show_answer')).then(s => set(ref(db, 'show_answer'), !s.val()));
+        };
+
+        window.resetMatch = () => {
+            if(confirm("هل تريد تصفير المباراة الحالية؟")) {
                 set(ref(db, 'active_match'), null);
-                set(ref(db, 'buzzer_winner'), "");
-                set(ref(db, 'current_question'), null);
                 location.reload();
             }
         };
 
         window.openTab = (id) => {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
-            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('active');
             document.getElementById('tab-'+id).classList.add('active-tab');
         };
+
+        function updateLeaderboard() {
+            const board = document.getElementById('teamsLeaderboard');
+            if(!board) return;
+            board.innerHTML = '';
+            Object.entries(allTeams).sort((a,b) => (b[1].score||0)-(a[1].score||0)).slice(0,5).forEach(([n,v]) => {
+                board.innerHTML += `<div class="flex justify-between glass p-3 rounded-lg border-r-4 border-yellow-500">
+                    <span class="font-bold">${n}</span> <span class="text-yellow-500">${v.score||0}</span>
+                </div>`;
+            });
+        }
 
         loadQuestionsFromFile();
     </script>
