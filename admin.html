@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة تحكم العمالقة 🕹️</title>
+    <style>
+        @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
+        @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
+
+        :root {
+            --primary: #3b82f6;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg: #0f172a;
+        }
+
+        body {
+            background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        h2 { font-family: 'Galaxy'; color: #facc15; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+
+        input, select, textarea {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
+            border: 1px solid #334155; background: #1e293b; color: white; box-sizing: border-box;
+        }
+
+        .btn {
+            padding: 15px 25px; border: none; border-radius: 10px; cursor: pointer;
+            font-family: 'Dahka'; font-size: 1.2rem; transition: 0.3s; width: 100%; margin-top: 10px;
+        }
+
+        .btn-open { background: var(--success); color: white; }
+        .btn-close { background: var(--danger); color: white; }
+        .btn-update { background: var(--primary); color: white; }
+
+        .status-badge {
+            padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; float: left;
+        }
+        .online { background: var(--success); }
+
+        .player-list { list-style: none; padding: 0; }
+        .player-list li { background: #1e293b; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>التحكم اللحظي ⚡</h2>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-open" onclick="updateBuzzer('open')">فتح البازر ✅</button>
+            <button class="btn btn-close" onclick="resetBuzzer()">تصفير البازر ❌</button>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <label>الموقت (بالثواني):</label>
+            <input type="number" id="timerInput" value="30">
+            <button class="btn btn-update" onclick="startTimer()">بدء العد التنازلي ⏱️</button>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button class="btn" style="background: #a855f7;" onclick="triggerCelebration()">تشغيل الاحتفال 🎊</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>إرسال السؤال ❓</h2>
+        <input type="text" id="qCategory" placeholder="المجال (مثل: لغة عربية)">
+        <textarea id="qText" rows="3" placeholder="اكتب نص السؤال هنا..."></textarea>
+        <button class="btn btn-update" onclick="sendQuestion()">تحديث الشاشة بالسؤال 🚀</button>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #000; border-radius: 10px;">
+            <p style="color: #facc15; margin: 0;">من ضغط أولاً؟</p>
+            <h1 id="winnerDisplay" style="font-family: 'Dahka'; margin: 10px 0;">-- لا أحد --</h1>
+        </div>
+    </div>
+
+    <div class="card" style="grid-column: 1 / span 2;">
+        <h2>إعدادات المباراة النشطة ⚔️</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label>اسم فريق A:</label>
+                <input type="text" id="teamAName" value="الصقور">
+                <label>لعيبة فريق A (افصل بينهم بفاصلة ,):</label>
+                <input type="text" id="teamAPlayers" value="أحمد, محمد, علي, محمود">
+            </div>
+            <div>
+                <label>اسم فريق B:</label>
+                <input type="text" id="teamBName" value="الوحوش">
+                <label>لعيبة فريق B (افصل بينهم بفاصلة ,):</label>
+                <input type="text" id="teamBPlayers" value="سعد, فهد, جابر, سالم">
+            </div>
+        </div>
+        <button class="btn btn-update" onclick="updateMatch()">تحديث المباراة واللعيبة لجميع المتسابقين 🔄</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
+            authDomain: "amaleqa.firebaseapp.com",
+            projectId: "amaleqa",
+            databaseURL: "https://amaleqa-default-rtdb.firebaseio.com",
+            appId: "1:635598551087:web:fdf0ab135003224393eeda"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- وظائف التحكم ---
+
+        // 1. فتح البازر
+        window.updateBuzzer = function(status) {
+            set(ref(db, 'buzzer_status'), status);
+        }
+
+        // 2. تصفير البازر (عشان سؤال جديد)
+        window.resetBuzzer = function() {
+            set(ref(db, 'buzzer_status'), 'locked');
+            set(ref(db, 'buzzer_winner'), ""); // مسح الفائز من الشاشة
+        }
+
+        // 3. تحديث السؤال
+        window.sendQuestion = function() {
+            const text = document.getElementById('qText').value;
+            const category = document.getElementById('qCategory').value;
+            set(ref(db, 'current_question'), { text, category });
+        }
+
+        // 4. تحديث الماتش واللعيبة
+        window.updateMatch = function() {
+            const teamA = {
+                name: document.getElementById('teamAName').value,
+                players: document.getElementById('teamAPlayers').value.split(',').map(s => s.trim())
+            };
+            const teamB = {
+                name: document.getElementById('teamBName').value,
+                players: document.getElementById('teamBPlayers').value.split(',').map(s => s.trim())
+            };
+            set(ref(db, 'active_match'), { teamA, teamB });
+            alert("تم تحديث بيانات المباراة!");
+        }
+
+        // 5. الموقت
+        let timerInterval;
+        window.startTimer = function() {
+            let timeLeft = parseInt(document.getElementById('timerInput').value);
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                set(ref(db, 'timer_value'), timeLeft);
+                if (timeLeft <= 0) clearInterval(timerInterval);
+                timeLeft--;
+            }, 1000);
+        }
+
+        // 6. الاحتفال
+        window.triggerCelebration = function() {
+            set(ref(db, 'celebration_trigger'), true);
+            setTimeout(() => set(ref(db, 'celebration_trigger'), false), 3000);
+        }
+
+        // 7. عرض الفائز في صفحة الأدمن فوراً
+        onValue(ref(db, 'buzzer_winner'), (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.name) {
+                document.getElementById('winnerDisplay').innerText = data.name + " (" + data.team + ")";
+                document.getElementById('winnerDisplay').style.color = "#22c55e";
+            } else {
+                document.getElementById('winnerDisplay').innerText = "-- لا أحد --";
+                document.getElementById('winnerDisplay').style.color = "white";
+            }
+        });
+    </script>
+</body>
+</html>
