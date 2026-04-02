@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Buzzer - العمالقة ⚡</title>
+    <style>
+        @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
+        @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
+        @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
+
+        :root {
+            --neon-cyan: #00f7ff;
+            --deep-purple: #0f0524;
+            --gold: #facc15;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            margin: 0; background: var(--deep-purple); height: 100vh;
+            color: white; font-family: 'Segoe UI', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            overflow: hidden; touch-action: none;
+            background-image: radial-gradient(circle at center, #1e0b4a 0%, #050112 100%);
+        }
+
+        /* الجزء العلوي: هوية اللاعب */
+        .player-card {
+            width: 90%; margin-top: 20px; padding: 20px;
+            background: var(--glass); backdrop-filter: blur(10px);
+            border-radius: 20px; border: 1px solid rgba(0, 247, 255, 0.2);
+            text-align: center; transition: 0.3s;
+        }
+
+        .welcome-msg { font-family: 'DGRawnaq'; font-size: 1rem; color: var(--neon-cyan); margin: 0; }
+        .player-display-name { 
+            font-family: 'Dahka'; font-size: 2.5rem; color: var(--gold); 
+            margin: 5px 0; text-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+        }
+
+        /* الـ Select بشكل شيك في البداية */
+        #setup-zone { width: 80%; margin-top: 20px; }
+        select {
+            width: 100%; padding: 15px; background: #1a0b38; color: white;
+            border: 2px solid var(--neon-cyan); border-radius: 12px;
+            font-family: 'Galaxy'; font-size: 1.2rem; outline: none;
+        }
+
+        /* منطقة البازر الأسطورية */
+        .buzzer-zone {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; width: 100%;
+        }
+
+        .giant-buzzer {
+            width: 280px; height: 280px; border-radius: 50%;
+            border: none; outline: none; position: relative;
+            background: radial-gradient(circle, #311475 0%, #0f0524 100%);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255,255,255,0.05);
+            cursor: pointer; transition: transform 0.05s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .giant-buzzer:active { transform: scale(0.9) translateY(5px); }
+
+        /* تأثير الهالة المضيئة */
+        .glow-ring {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; border: 4px solid var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 20px var(--neon-cyan);
+            opacity: 0; transition: 0.3s;
+        }
+
+        .active-ready .glow-ring { opacity: 1; animation: pulse 1.5s infinite; }
+
+        .giant-buzzer span {
+            font-family: 'Belabelo'; font-size: 4.5rem; color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            z-index: 5; position: relative;
+        }
+
+        /* شاشة الفوز المؤقتة على الموبايل */
+        .win-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--gold); z-index: 1000; display: none;
+            justify-content: center; align-items: center; color: black;
+            font-family: 'Dahka'; font-size: 5rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+
+        .locked { filter: grayscale(1); opacity: 0.4; pointer-events: none; }
+    </style>
+</head>
+<body class="locked" id="mainPage">
+
+    <div id="winOverlay" class="win-screen">دُست! ⚡</div>
+
+    <div class="player-card" id="playerCard">
+        <p class="welcome-msg">مرحباً بك يا عملاق</p>
+        <h2 class="player-display-name" id="userNameDisplay">اختر اسمك</h2>
+        <p id="teamNameDisplay" style="font-family: 'Galaxy'; color: var(--neon-cyan); margin: 0;"></p>
+    </div>
+
+    <div id="setup-zone">
+        <select id="playerPicker">
+            <option value="" disabled selected>انتظر جلب العمالقة...</option>
+        </select>
+    </div>
+
+    <div class="buzzer-zone">
+        <button class="giant-buzzer" id="buzzerBtn">
+            <div class="glow-ring"></div>
+            <span>إجابة</span>
+        </button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
+            authDomain: "amaleqa.firebaseapp.com",
+            projectId: "amaleqa",
+            databaseURL: "https://amaleqa-default-rtdb.firebaseio.com",
+            appId: "1:635598551087:web:fdf0ab135003224393eeda"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const playerPicker = document.getElementById('playerPicker');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const teamNameDisplay = document.getElementById('teamNameDisplay');
+        const mainPage = document.getElementById('mainPage');
+        const buzzerBtn = document.getElementById('buzzerBtn');
+        const winOverlay = document.getElementById('winOverlay');
+
+        // 1. جلب بيانات الماتش الحالي
+        onValue(ref(db, 'active_match'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                playerPicker.innerHTML = `<option value="" disabled selected>من أنت من هؤلاء؟</option>`;
+                const allPlayers = [
+                    ...data.teamA.players.map(p => ({name: p, team: data.teamA.name})),
+                    ...data.teamB.players.map(p => ({name: p, team: data.teamB.name}))
+                ];
+                allPlayers.forEach(p => {
+                    playerPicker.innerHTML += `<option value="${p.name}" data-team="${p.team}">${p.name}</option>`;
+                });
+            }
+        });
+
+        // 2. عند اختيار اللاعب
+        playerPicker.addEventListener('change', (e) => {
+            const name = e.target.value;
+            const team = e.target.options[e.target.selectedIndex].getAttribute('data-team');
+            userNameDisplay.innerText = name;
+            teamNameDisplay.innerText = "فريق " + team;
+            document.getElementById('setup-zone').style.display = 'none';
+            localStorage.setItem('savedGiantName', name);
+            localStorage.setItem('savedGiantTeam', team);
+        });
+
+        // 3. التحكم في حالة البازر (Open/Locked)
+        onValue(ref(db, 'buzzer_status'), (snapshot) => {
+            if (snapshot.val() === "open") {
+                mainPage.classList.remove('locked');
+                mainPage.classList.add('active-ready');
+            } else {
+                mainPage.classList.add('locked');
+                mainPage.classList.remove('active-ready');
+                winOverlay.style.display = 'none';
+            }
+        });
+
+        // 4. الضغطة الصاروخية (Transaction Logic)
+        buzzerBtn.addEventListener('pointerdown', async () => {
+            const pName = userNameDisplay.innerText;
+            if (pName === "اختر اسمك") return alert("اختر اسمك الأول!");
+
+            // اهتزاز قوي
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+            const winnerRef = ref(db, 'buzzer_winner');
+
+            // نظام الترانزاكشن: السيرفر بيقرر مين الأول بالملي ثانية
+            try {
+                const result = await runTransaction(winnerRef, (currentData) => {
+                    if (currentData === null || currentData === "") {
+                        return {
+                            name: pName,
+                            team: teamNameDisplay.innerText.replace("فريق ", ""),
+                            timestamp: serverTimestamp()
+                        };
+                    }
+                    return; // لو في حد مسجل فعلاً، متعملش حاجة
+                });
+
+                if (result.committed) {
+                    winOverlay.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error("Buzzer Error:", error);
+            }
+        });
+    </script>
+</body>
+</html>
