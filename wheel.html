@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>عجلة العمالقة | The Wheel 🎡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
+        
+        body {
+            background: transparent; /* عشان تظهر فوق الشاشة الرئيسية */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; font-family: 'Cairo', sans-serif; overflow: hidden;
+        }
+
+        .wheel-container {
+            position: relative; width: 500px; height: 500px;
+            border: 15px solid #1e293b; border-radius: 50%;
+            box-shadow: 0 0 50px rgba(250, 204, 21, 0.3), inset 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        #canvas {
+            width: 100%; height: 100%;
+            transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        /* المؤشر العلوي */
+        .pointer {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            width: 40px; height: 50px; background: #ff003c;
+            clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+        }
+
+        .center-hub {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80px; height: 80px; background: #0f172a; border: 4px solid #facc15;
+            border-radius: 50%; z-index: 5; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px #facc15;
+        }
+
+        .win-announcement {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            background: rgba(250, 204, 21, 0.95); color: #000;
+            padding: 40px 80px; border-radius: 100px; font-size: 3rem;
+            font-weight: 900; z-index: 100; transition: 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+            box-shadow: 0 0 100px #facc15; text-align: center;
+        }
+        .win-announcement.show { transform: translate(-50%, -50%) scale(1); }
+    </style>
+</head>
+<body>
+
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <div class="center-hub">
+            <div class="w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
+        </div>
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
+
+    <div id="winMsg" class="win-announcement">
+        مبروك! <br> <span id="winValue">---</span>
+    </div>
+
+    <audio id="spinSound" src="https://www.soundjay.com/misc/sounds/mechanical-clutter-1.mp3"></audio>
+    <audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
+            authDomain: "amaleqa.firebaseapp.com",
+            projectId: "amaleqa",
+            databaseURL: "https://amaleqa-default-rtdb.firebaseio.com",
+            appId: "1:635598551087:web:fdf0ab135003224393eeda"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const sectors = [
+            { label: "10 نقاط", color: "#1e293b" },
+            { label: "خصم 5", color: "#ff003c" },
+            { label: "20 نقطة", color: "#1e293b" },
+            { label: "تخطي دور", color: "#475569" },
+            { label: "5 نقاط", color: "#1e293b" },
+            { label: "هدية 🎁", color: "#facc15" },
+            { label: "صفر!", color: "#000000" },
+            { label: "15 نقطة", color: "#1e293b" }
+        ];
+
+        const arc = Math.PI / (sectors.length / 2);
+        let currentRotation = 0;
+
+        // رسم العجلة
+        function drawWheel() {
+            sectors.forEach((sector, i) => {
+                const angle = i * arc;
+                ctx.beginPath();
+                ctx.fillStyle = sector.color;
+                ctx.moveTo(250, 250);
+                ctx.arc(250, 250, 250, angle, angle + arc);
+                ctx.lineTo(250, 250);
+                ctx.fill();
+                ctx.strokeStyle = "rgba(255,255,255,0.1)";
+                ctx.stroke();
+
+                // إضافة النص
+                ctx.save();
+                ctx.translate(250, 250);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = sector.color === "#facc15" ? "#000" : "#fff";
+                ctx.font = "bold 20px Cairo";
+                ctx.fillText(sector.label, 230, 10);
+                ctx.restore();
+            });
+        }
+
+        drawWheel();
+
+        // منطق الدوران (Triggered by Firebase)
+        onValue(ref(db, 'wheel_trigger'), (snap) => {
+            if (snap.val() === true) {
+                spin();
+                // نرجع الـ trigger لـ false عشان يقبل أوامر تانية
+                set(ref(db, 'wheel_trigger'), false);
+            }
+        });
+
+        function spin() {
+            const spinSound = document.getElementById('spinSound');
+            spinSound.play();
+
+            const randomRotation = Math.floor(3000 + Math.random() * 5000); // دوران عشوائي كبير
+            currentRotation += randomRotation;
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                spinSound.pause();
+                spinSound.currentTime = 0;
+                
+                // حساب النتيجة (الزاوية النهائية)
+                const actualDeg = currentRotation % 360;
+                const sectorAngle = 360 / sectors.length;
+                // المؤشر في الأعلى (90 درجة)، لذا نحتاج لتعديل الحساب
+                const index = Math.floor((360 - actualDeg + 270) % 360 / sectorAngle);
+                const result = sectors[index].label;
+
+                // إظهار النتيجة
+                document.getElementById('winValue').innerText = result;
+                document.getElementById('winMsg').classList.add('show');
+                document.getElementById('winSound').play();
+
+                // إخفاء النتيجة بعد 4 ثواني وإغلاق العجلة تلقائياً
+                setTimeout(() => {
+                    document.getElementById('winMsg').classList.remove('show');
+                    set(ref(db, 'wheel_status'), 'hide');
+                }, 4000);
+
+            }, 5000); // نفس وقت الـ transition في الـ CSS
+        }
+    </script>
+</body>
+</html>
