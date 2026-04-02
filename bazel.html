@@ -2,115 +2,89 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بازر العمالقة ⚡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جهاز البازر | Giant Buzzer ⚡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
-        @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
-        @font-face { font-family: 'Dahka'; src: url('ضحكه.ttf'); }
-
         :root {
-            --neon-emerald: #10b981;
-            --gold: #facc15;
-            --bg: #050810; 
+            --neon-red: #ff003c;
+            --bg-dark: #050505;
         }
-
         body {
-            margin: 0; background: var(--bg); height: 100vh;
-            color: white; font-family: 'Segoe UI', sans-serif;
-            display: flex; flex-direction: column; align-items: center;
-            overflow: hidden; touch-action: none;
-            background-image: radial-gradient(circle at center, #1e0b4a 0%, #050112 100%);
+            background: var(--bg-dark);
+            color: white; font-family: 'Cairo', sans-serif;
+            height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; overflow: hidden;
         }
 
-        /* الجزء العلوي: اختيار اللاعب */
-        .setup-card {
-            width: 90%; margin-top: 20px; padding: 15px;
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
-            border-radius: 15px; border: 1px solid var(--neon-emerald);
-            text-align: center;
+        /* زر البازر العملاق */
+        .buzzer-btn {
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle at top, #ff4d4d, #990000);
+            border: 10px solid #330000;
+            box-shadow: 0 15px 0 #660000, 0 20px 50px rgba(255, 0, 60, 0.3);
+            cursor: pointer; transition: all 0.1s;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; -webkit-tap-highlight-color: transparent;
         }
 
-        #playerPicker {
-            width: 100%; padding: 12px; background: #111827; color: var(--neon-blue);
-            border: 1px solid var(--neon-emerald); border-radius: 8px;
-            font-family: 'Galaxy'; font-size: 1.1rem; outline: none;
+        .buzzer-btn:active:not(.disabled) {
+            transform: translateY(10px);
+            box-shadow: 0 5px 0 #660000, 0 10px 30px rgba(255, 0, 60, 0.5);
         }
 
-        .identity-display { margin-top: 10px; display: none; }
-        .identity-display h2 { font-family: 'Dahka'; color: var(--gold); font-size: 2rem; margin: 5px 0; }
-
-        /* منطقة البازر */
-        .buzzer-area {
-            flex: 1; display: flex; justify-content: center; align-items: center; width: 100%;
+        .buzzer-btn.disabled {
+            filter: grayscale(1) opacity(0.5);
+            cursor: not-allowed; transform: translateY(10px);
+            box-shadow: none;
         }
 
-        .main-btn {
-            width: 260px; height: 260px; border-radius: 50%;
-            border: none; position: relative; cursor: pointer;
-            background: radial-gradient(circle, #2d1363 0%, #050810 100%);
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            transition: transform 0.05s; -webkit-tap-highlight-color: transparent;
+        /* تأثير الضوء عند الفوز */
+        .winner-flash {
+            animation: flash 0.5s infinite alternate;
+        }
+        @keyframes flash {
+            from { box-shadow: 0 0 20px #facc15; }
+            to { box-shadow: 0 0 60px #facc15; border-color: #facc15; }
         }
 
-        .main-btn:active { transform: scale(0.9); }
-
-        .glow {
-            position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 4px solid var(--neon-emerald); opacity: 0; transition: 0.3s;
+        .glass-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; border-radius: 12px;
+            text-align: center; color: white; width: 80%;
+            margin-bottom: 20px; outline: none;
         }
-
-        /* لما الأدمن يفتح البازر */
-        .active-mode .glow { opacity: 1; animation: blink 1.2s infinite; }
-        .locked-mode { filter: grayscale(1); opacity: 0.4; pointer-events: none; }
-
-        .main-btn span { font-family: 'Belabelo'; font-size: 4rem; color: white; text-shadow: 0 0 15px var(--neon-emerald); }
-
-        @keyframes blink { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
-        
-        .success-flash { background: var(--gold) !important; transition: 0.1s; }
-
-        /* زر الانتقال السريع لغرفة العمليات */
-        .admin-nav-link {
-            position: fixed; bottom: 15px; left: 15px;
-            width: 42px; height: 42px; background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(5px); border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; z-index: 10000; opacity: 0.3; transition: 0.3s;
-        }
-        .admin-nav-link:hover { opacity: 1; background: rgba(16, 185, 129, 0.1); border-color: var(--neon-emerald); }
-        .admin-nav-link svg { width: 22px; height: 22px; fill: var(--neon-emerald); }
     </style>
 </head>
-<body class="locked-mode" id="pageContainer">
+<body>
 
-    <!-- زر العودة لغرفة العمليات (للأدمن) -->
-    <a href="admin.html" class="admin-nav-link" title="الذهاب لغرفة العمليات">
-        <svg viewBox="0 0 24 24">
-            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.35 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.97 19.05,5.05L16.56,6.05C16.04,5.65 15.44,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.56,5.32 7.96,5.65 7.44,6.05L4.95,5.05C4.73,4.97 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.35 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.95C7.96,18.35 8.56,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.44,18.68 16.04,18.35 16.56,17.95L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-        </svg>
-    </a>
-
-    <div class="setup-card" id="setupZone">
-        <select id="playerPicker">
-            <option value="" disabled selected>انتظر بدء المباراة...</option>
-        </select>
-        <div class="identity-display" id="idDisplay">
-            <p style="margin:0; font-size:0.8rem;">أنت الآن العملاق:</p>
-            <h2 id="nameTag">---</h2>
-        </div>
+    <div id="setup-ui" class="flex flex-col items-center w-full max-w-xs">
+        <h2 class="text-2xl mb-6 font-black text-red-500">تعريف العملاق 👤</h2>
+        <input type="text" id="playerName" placeholder="اسمك" class="glass-input">
+        <input type="text" id="playerTeam" placeholder="اسم فريقك (نفس المكتوب للأدمن)" class="glass-input">
+        <button onclick="saveIdentity()" class="w-full bg-red-600 py-4 rounded-xl font-black">دخول الحلبة</button>
     </div>
 
-    <div class="buzzer-area">
-        <button class="main-btn" id="fireBtn">
-            <div class="glow"></div>
-            <span>إجابة</span>
+    <div id="buzzer-ui" class="hidden flex flex-col items-center">
+        <div id="status-text" class="mb-8 text-xl font-bold text-slate-400">جاهز للهجوم...</div>
+        
+        <button id="mainBuzzer" onclick="hitBuzzer()" class="buzzer-btn">
+            <span class="text-white text-4xl font-black select-none">اضغط!</span>
         </button>
+
+        <div class="mt-12 text-slate-500 text-sm italic" id="identity-tag"></div>
+        <button onclick="clearIdentity()" class="mt-4 text-xs text-slate-700 underline">تغيير الاسم</button>
     </div>
+
+    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+    <audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, runTransaction, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
@@ -119,71 +93,96 @@
             databaseURL: "https://amaleqa-default-rtdb.firebaseio.com",
             appId: "1:635598551087:web:fdf0ab135003224393eeda"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        const playerPicker = document.getElementById('playerPicker');
-        const pageContainer = document.getElementById('pageContainer');
-        const idDisplay = document.getElementById('idDisplay');
-        const nameTag = document.getElementById('nameTag');
+        let myName = localStorage.getItem('giant_name');
+        let myTeam = localStorage.getItem('giant_team');
 
-        // 1. مراقبة المباراة النشطة (سحب الأسماء من teams اللي في الفايربيز)
-        onValue(ref(db, 'active_match'), (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                playerPicker.innerHTML = `<option value="" disabled selected>اختر اسمك من القائمة</option>`;
-                
-                // إضافة لعيبة الفريق الأول (A)
-                if(data.teamA.players) data.teamA.players.forEach(p => {
-                    playerPicker.innerHTML += `<option value="${p}" data-team="${data.teamA.name}">${p} (${data.teamA.name})</option>`;
-                });
-                // إضافة لعيبة الفريق الثاني (B)
-                if(data.teamB.players) data.teamB.players.forEach(p => {
-                    playerPicker.innerHTML += `<option value="${p}" data-team="${data.teamB.name}">${p} (${data.teamB.name})</option>`;
-                });
-            }
-        });
+        // التحقق من الهوية
+        window.saveIdentity = () => {
+            const n = document.getElementById('playerName').value;
+            const t = document.getElementById('playerTeam').value;
+            if(!n || !t) return alert("اكتب اسمك وفريقك يا بطل!");
+            localStorage.setItem('giant_name', n);
+            localStorage.setItem('giant_team', t);
+            location.reload();
+        };
 
-        // 2. عند اختيار اللاعب
-        playerPicker.addEventListener('change', (e) => {
-            const name = e.target.value;
-            nameTag.innerText = name;
-            playerPicker.style.display = 'none';
-            idDisplay.style.display = 'block';
-        });
+        window.clearIdentity = () => {
+            localStorage.clear();
+            location.reload();
+        };
 
-        // 3. التحكم في حالة البازر (مفتوح/مقفول)
-        onValue(ref(db, 'buzzer_status'), (snapshot) => {
-            if (snapshot.val() === "open") {
-                pageContainer.classList.remove('locked-mode');
-                pageContainer.classList.add('active-mode');
+        if(myName && myTeam) {
+            document.getElementById('setup-ui').classList.add('hidden');
+            document.getElementById('buzzer-ui').classList.remove('hidden');
+            document.getElementById('identity-tag').innerText = `المتسابق: ${myName} | فريق: ${myTeam}`;
+        }
+
+        const btn = document.getElementById('mainBuzzer');
+        const status = document.getElementById('status-text');
+
+        // المنطق العاقل: مراقبة حالة البازر من السيرفر
+        onValue(ref(db, 'buzzer_status'), (snap) => {
+            const state = snap.val();
+            if(state === 'open') {
+                enableBuzzer();
             } else {
-                pageContainer.classList.add('locked-mode');
-                pageContainer.classList.remove('active-mode');
-                document.body.classList.remove('success-flash');
+                disableBuzzer("انتظر الإشارة...");
             }
         });
 
-        // 4. إرسال الضغطة (الأسرع يفوز)
-        document.getElementById('fireBtn').addEventListener('pointerdown', async () => {
-            const myName = nameTag.innerText;
-            if (myName === "---") return alert("اختر اسمك الأول!");
-
-            const team = playerPicker.options[playerPicker.selectedIndex].getAttribute('data-team');
-            
-            if (navigator.vibrate) navigator.vibrate(150);
-
-            // استخدام Transaction لضمان إن الأسرع بالملي ثانية هو اللي يتسجل
-            const winnerRef = ref(db, 'buzzer_winner');
-            await runTransaction(winnerRef, (current) => {
-                if (current === null || current === "") {
-                    return { name: myName, team: team, time: serverTimestamp() };
+        // مراقبة لو فيه فائز بالفعل
+        onValue(ref(db, 'buzzer_winner'), (snap) => {
+            const winner = snap.val();
+            if(winner && winner.name) {
+                if(winner.name === myName) {
+                    status.innerText = "أنت الأسرع! 🏆";
+                    status.classList.add('text-yellow-500');
+                    btn.classList.add('winner-flash');
+                    document.getElementById('winSound').play();
+                } else {
+                    disableBuzzer(`خطفها ${winner.name}! 💨`);
                 }
-                return; 
-            });
-            document.body.classList.add('success-flash');
+            } else {
+                btn.classList.remove('winner-flash');
+                status.classList.remove('text-yellow-500');
+            }
         });
+
+        window.hitBuzzer = () => {
+            if(btn.classList.contains('disabled')) return;
+
+            document.getElementById('clickSound').play();
+
+            // استخدام Transaction لضمان أن شخص واحد فقط يفوز في نفس الميكرو-ثانية
+            runTransaction(ref(db, 'buzzer_winner'), (currentData) => {
+                if (currentData === "" || currentData === null) {
+                    // السيرفر فاضي؟ مبروك إنت الفائز
+                    return { name: myName, team: myTeam, time: Date.now() };
+                } else {
+                    // فيه حد سبقك؟ لا تغير البيانات
+                    return; 
+                }
+            }).then((result) => {
+                if(result.committed) {
+                    // لو العملية نجحت، اقفل البازر عند الكل
+                    set(ref(db, 'buzzer_status'), 'locked');
+                }
+            });
+        };
+
+        function disableBuzzer(msg) {
+            btn.classList.add('disabled');
+            status.innerText = msg;
+        }
+
+        function enableBuzzer() {
+            btn.classList.remove('disabled');
+            status.innerText = "انقض الآن! 🔥";
+        }
+
     </script>
 </body>
 </html>
