@@ -12,10 +12,10 @@
         @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
 
         :root {
-            --bg-dark: #070b14; /* كحلي غامق جداً للغموض */
-            --glass: rgba(255, 255, 255, 0.03); /* تأثير الزجاج */
-            --accent-gold: #facc15; /* أصفر ذهبي للعمالقة */
-            --accent-neon: #38bdf8; /* أزرق نيون للطاقة */
+            --bg-dark: #070b14;
+            --glass: rgba(255, 255, 255, 0.03);
+            --accent-gold: #facc15;
+            --accent-neon: #38bdf8;
             --text-main: #f8fafc;
             --border-color: rgba(56, 189, 248, 0.2);
             --success-green: #22c55e;
@@ -35,7 +35,6 @@
                 radial-gradient(at 90% 90%, rgba(250, 204, 21, 0.08) 0px, transparent 50%);
         }
 
-        /* حاوية الكارت الزجاجي */
         .join-container {
             background: var(--glass);
             backdrop-filter: blur(20px);
@@ -48,13 +47,12 @@
             text-align: center;
             position: relative;
             animation: cardSlideIn 1s ease-out;
-            margin-top: 50px; /* مسافة للأيقونة فوق */
+            margin-top: 50px;
         }
 
-        /* شعار العمالقة في دائرة مضيئة */
         .logo-circle-container {
             position: absolute;
-            top: -60px; /* نصف قطر الدائرة تقريباً خارج الكارت */
+            top: -60px;
             left: 50%;
             transform: translateX(-50%);
             width: 120px;
@@ -66,12 +64,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* لضمان الدائرة */
+            overflow: hidden;
             z-index: 10;
         }
 
         .logo-img {
-            width: 90%; /* أصغر قليلاً من الدائرة */
+            width: 90%;
             height: 90%;
             background: url('3amlq.png') no-repeat center/contain;
         }
@@ -80,7 +78,7 @@
             font-family: 'Belabelo', sans-serif;
             font-size: 2.8rem;
             color: var(--accent-gold);
-            margin: 60px 0 10px 0; /* مسافة من الأيقونة */
+            margin: 60px 0 10px 0;
             text-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
         }
 
@@ -91,7 +89,6 @@
             margin-bottom: 30px;
         }
 
-        /* تنسيق خانات الإدخال الاحترافية */
         .input-group {
             margin-bottom: 20px;
             position: relative;
@@ -117,7 +114,6 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-sizing: border-box;
-            /* استخدام خط "جالاكسي" داخل الحقل */
             font-family: 'Galaxy', sans-serif;
         }
 
@@ -131,10 +127,9 @@
         .styled-input::placeholder {
             color: #475569;
             font-size: 0.9rem;
-            font-family: 'Segoe UI', sans-serif; /* Placeholder بخط عادي */
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        /* زر "الدخول" الأسطوري */
         .btn-join {
             width: 100%;
             padding: 18px;
@@ -156,10 +151,9 @@
             box-shadow: 0 10px 30px rgba(250, 204, 21, 0.4);
         }
 
-        /* --- التنبيهات الزجاجية الاحترافية --- */
         .custom-alert-container {
             position: fixed;
-            top: -100px; /* مخفي في البداية */
+            top: -100px;
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
@@ -177,7 +171,7 @@
             transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
 
-        .alert-show { top: 20px; } /* يظهر من الأعلى */
+        .alert-show { top: 20px; }
 
         .alert-icon {
             width: 40px; height: 40px;
@@ -189,12 +183,11 @@
 
         .alert-text {
             flex: 1;
-            font-family: 'Dahka', sans-serif; /* خط "ضحكة" للتنبيه */
+            font-family: 'Dahka', sans-serif;
             font-size: 1.4rem;
             color: var(--text-main);
         }
 
-        /* أنيميشن */
         @keyframes cardSlideIn {
             0% { transform: translateY(50px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
@@ -223,59 +216,72 @@
             </div>
 
             <div class="input-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div>
-                    <label class="input-label">اللاعب 1 (القائد)</label>
-                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
-                </div>
-                <div>
-                    <label class="input-label">اللاعب 2</label>
-                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
-                </div>
-                <div>
-                    <label class="input-label">اللاعب 3</label>
-                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
-                </div>
-                <div>
-                    <label class="input-label">اللاعب 4</label>
-                    <input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required>
-                </div>
+                <div><label class="input-label">اللاعب 1 (القائد)</label><input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required></div>
+                <div><label class="input-label">اللاعب 2</label><input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required></div>
+                <div><label class="input-label">اللاعب 3</label><input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required></div>
+                <div><label class="input-label">اللاعب 4</label><input type="text" class="styled-input player-name" placeholder="الاسم الثنائي" required></div>
             </div>
 
-            <button type="submit" class="btn-join">تأكيد الانضمام 🔥</button>
+            <button type="submit" id="submitBtn" class="btn-join">تأكيد الانضمام 🔥</button>
         </form>
     </div>
 
-    <script>
-        // كود التنبيه الاحترافي
-        function showSuccessAlert(message) {
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // إعداداتك اللي بعتها
+        const firebaseConfig = {
+            apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
+            authDomain: "amaleqa.firebaseapp.com",
+            projectId: "amaleqa",
+            storageBucket: "amaleqa.firebasestorage.app",
+            messagingSenderId: "635598551087",
+            appId: "1:635598551087:web:fdf0ab135003224393eeda",
+            measurementId: "G-C93N915P5G"
+        };
+
+        // تهيئة الفايربيز
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // وظيفة التنبيه
+        window.showSuccessAlert = function(message) {
             const alert = document.getElementById('customAlert');
             const alertText = alert.querySelector('.alert-text');
             alertText.innerText = message;
             alert.classList.add('alert-show');
-            
-            // إخفاء التنبيه بعد 3 ثواني
-            setTimeout(() => {
-                alert.classList.remove('alert-show');
-            }, 3000);
+            setTimeout(() => alert.classList.remove('alert-show'), 3000);
         }
 
-        // كود تجريبي
+        // تسجيل البيانات
         document.getElementById('joinForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "جاري التسجيل...";
-            btn.style.opacity = "0.7";
+            const btn = document.getElementById('submitBtn');
+            const teamName = document.getElementById('teamName').value;
+            const players = Array.from(document.querySelectorAll('.player-name')).map(input => input.value);
 
-            // محاكاة الاتصال بالفايربيس
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.style.opacity = "1";
-                // استدعاء التنبيه الاحترافي
-                showSuccessAlert("تم تسجيل 'العمالقة' بنجاح! انتظر الإشارة.");
-                // إعادة تعيين الفورم
+            btn.innerText = "جاري الحفظ في القاعدة...";
+            btn.disabled = true;
+
+            // إرسال البيانات للـ Realtime Database
+            set(ref(db, 'teams/' + teamName), {
+                players: players,
+                score: 0,
+                timestamp: Date.now()
+            })
+            .then(() => {
+                showSuccessAlert("تم تسجيل فريق " + teamName + " بنجاح!");
                 e.target.reset();
-            }, 1500);
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("حدث خطأ في الشبكة، حاول مرة أخرى!");
+            })
+            .finally(() => {
+                btn.innerText = "تأكيد الانضمام 🔥";
+                btn.disabled = false;
+            });
         });
     </script>
 </body>
