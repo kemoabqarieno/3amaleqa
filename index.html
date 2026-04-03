@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* تعريف الخطوط */
         @font-face { font-family: 'Amira'; src: url('اميرة.ttf'); }
         @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
         @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
@@ -29,26 +28,24 @@
             display: flex; flex-direction: column;
         }
 
-        /* حاويات الفرق الجانبية - تصميم سينمائي */
         .team-card {
             position: absolute; top: 50%; transform: translateY(-50%);
             width: 20vw; min-width: 250px; padding: 40px 20px;
             background: rgba(15, 23, 42, 0.3);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center; transition: all 0.5s ease;
+            z-index: 20;
         }
 
-        .team-left { left: 0; border-radius: 0 40px 40px 0; border-right: 8px solid var(--neon-red); box-shadow: -20px 0 50px rgba(255, 0, 60, 0.1); }
-        .team-right { right: 0; border-radius: 40px 0 0 40px; border-left: 8px solid var(--neon-blue); box-shadow: 20px 0 50px rgba(0, 210, 255, 0.1); }
+        .team-left { left: 0; border-radius: 0 40px 40px 0; border-right: 8px solid var(--neon-red); }
+        .team-right { right: 0; border-radius: 40px 0 0 40px; border-left: 8px solid var(--neon-blue); }
 
         .score-num {
             font-family: 'DGRawnaq', sans-serif; font-size: 8rem;
-            line-height: 1; margin-top: 10px;
-            filter: drop-shadow(0 0 15px currentColor);
+            line-height: 1; filter: drop-shadow(0 0 15px currentColor);
         }
 
-        /* منطقة السؤال المركزية */
         .main-arena {
             flex: 1; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
@@ -56,74 +53,69 @@
         }
 
         .q-wrapper {
-            width: 100%; position: relative; text-align: center;
+            width: 100%; text-align: center;
             background: rgba(255, 255, 255, 0.03);
             border-radius: 50px; padding: 60px 40px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
         }
 
         .question-text {
             font-family: 'Amira', sans-serif; font-size: 5.5rem;
-            line-height: 1.2; text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            line-height: 1.2;
         }
 
-        /* المؤقت المطور */
         .timer-box {
             position: relative; width: 180px; height: 180px; margin-top: -90px;
             background: var(--bg-dark); border-radius: 50%; padding: 10px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            transition: all 0.5s ease;
         }
 
         .timer-circle {
             fill: none; stroke-width: 10; stroke-linecap: round;
-            stroke-dasharray: 502; stroke-dashoffset: 0;
-            transition: stroke-dashoffset 1s linear, stroke 0.3s;
+            stroke-dasharray: 502; transition: stroke-dashoffset 1s linear;
         }
 
-        /* شاشات التنبيه */
         .overlay-screen {
             position: fixed; inset: 0; z-index: 100;
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            backdrop-filter: blur(20px); animation: fadeIn 0.4s ease;
+            backdrop-filter: blur(20px);
         }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .answer-reveal {
-            margin-top: 30px; font-family: 'Amira'; font-size: 4rem;
+            margin-top: 30px; font-family: 'Amira'; font-size: 5rem;
             color: #4ade80; background: rgba(34, 197, 94, 0.1);
-            padding: 15px 50px; border-radius: 20px; border: 2px dashed #4ade80;
-            display: none;
+            padding: 20px 60px; border-radius: 30px; border: 3px dashed #4ade80;
+            display: none; /* مخفي افتراضياً */
         }
 
-        /* لتنسيق الخطوط العريضة */
-        .font-belabelo { font-family: 'Belabelo', sans-serif; }
+        /* تنسيق الألوان عند الفوز أو الخسارة */
+        .bg-correct { background-color: rgba(22, 163, 74, 0.95) !important; }
+        .bg-wrong { background-color: rgba(220, 38, 38, 0.95) !important; }
     </style>
 </head>
 <body>
 
     <div id="start-overlay" class="fixed inset-0 z-[999] bg-slate-950 flex flex-col items-center justify-center cursor-pointer">
-        <div class="text-9xl mb-6">🏆</div>
-        <h1 class="text-7xl font-belabelo text-yellow-500 mb-4">ساحة العمالقة</h1>
-        <p class="text-2xl text-white/40 animate-pulse">اضغط في أي مكان للبدء</p>
+        <h1 class="text-7xl font-['Belabelo'] text-yellow-500 mb-4">ساحة العمالقة</h1>
+        <p class="text-2xl text-white/40 animate-pulse">اضغط للبدء</p>
     </div>
 
     <div class="team-card team-left">
-        <h2 id="nameA" class="text-5xl font-belabelo text-white truncate px-2">الفريق الأول</h2>
+        <h2 id="nameA" class="text-5xl font-['Belabelo'] text-white truncate">---</h2>
         <div id="scoreA" class="score-num text-red-500">00</div>
     </div>
 
     <div class="team-card team-right">
-        <h2 id="nameB" class="text-5xl font-belabelo text-white truncate px-2">الفريق الثاني</h2>
+        <h2 id="nameB" class="text-5xl font-['Belabelo'] text-white truncate">---</h2>
         <div id="scoreB" class="score-num text-blue-400">00</div>
     </div>
 
     <main class="main-arena">
         <div class="q-wrapper" id="q-container">
-            <p id="question-text" class="question-text">بانتظار انطلاق العمالقة...</p>
+            <p id="question-text" class="question-text">بانتظار السؤال...</p>
             <div id="answer-reveal" class="answer-reveal">
-                <span class="text-xl block text-white/30 font-sans">الإجابة النموذجية</span>
+                <span class="text-xl block text-white/50 font-sans mb-2">الإجابة النموذجية</span>
                 <span id="final-answer">---</span>
             </div>
         </div>
@@ -138,16 +130,13 @@
     </main>
 
     <div id="buzzer-overlay" class="overlay-screen bg-black/90">
-        <div class="text-center">
-            <p class="text-yellow-500 text-3xl font-bold mb-4">أسرع هجمة من:</p>
-            <h1 id="winner-name" class="text-[12rem] font-belabelo text-white leading-none">---</h1>
-            <div class="mt-8 text-4xl text-white/50 animate-bounce">مستعد للإجابة...</div>
-        </div>
+        <h1 id="winner-name" class="text-[12rem] font-['Belabelo'] text-white leading-none">---</h1>
+        <div class="mt-8 text-4xl text-yellow-500 animate-bounce">مستعد للإجابة...</div>
     </div>
 
     <div id="status-overlay" class="overlay-screen">
         <div id="status-icon" class="text-[20rem] mb-4"></div>
-        <h1 id="status-title" class="text-9xl font-belabelo text-white"></h1>
+        <h1 id="status-title" class="text-9xl font-['Belabelo'] text-white"></h1>
     </div>
 
     <audio id="snd-buzz" src="https://assets.mixkit.co/active_storage/sfx/2959/2959-preview.mp3"></audio>
@@ -168,56 +157,49 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // تفعيل الصوت والبدء
+        // تشغيل واجهة البداية
         document.getElementById('start-overlay').onclick = () => {
             document.getElementById('start-overlay').style.display = 'none';
             ['snd-buzz', 'snd-correct', 'snd-wrong'].forEach(id => {
                 const a = document.getElementById(id);
-                a.play().then(() => { a.pause(); a.currentTime = 0; });
+                a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
             });
         };
 
-        // 1. عرض أسماء الفرق والنتائج الحقيقية
+        // تحديث البيانات (الفرق، السؤال، المؤقت)
         onValue(ref(db, 'teams'), (snap) => {
-            const teams = snap.val();
-            if (!teams) return;
+            const teams = snap.val(); if (!teams) return;
             const names = Object.keys(teams);
-            
-            // الفريق الأول
             if (names[0]) {
                 document.getElementById('nameA').innerText = names[0];
                 document.getElementById('scoreA').innerText = (teams[names[0]].score || 0).toString().padStart(2, '0');
             }
-            // الفريق الثاني
             if (names[1]) {
                 document.getElementById('nameB').innerText = names[1];
                 document.getElementById('scoreB').innerText = (teams[names[1]].score || 0).toString().padStart(2, '0');
             }
         });
 
-        // 2. مراقبة السؤال
         onValue(ref(db, 'current_question'), (snap) => {
             const q = snap.val();
             if(q) {
                 document.getElementById('question-text').innerText = q.text;
                 document.getElementById('final-answer').innerText = q.answer;
+                // إعادة تصفير الواجهة للسؤال الجديد
+                document.getElementById('question-text').style.display = 'block';
                 document.getElementById('answer-reveal').style.display = 'none';
-                document.getElementById('q-container').style.opacity = '1';
                 document.getElementById('timer-ui').style.opacity = '1';
+                document.getElementById('q-container').style.opacity = '1';
             }
         });
 
-        // 3. مراقبة المؤقت
         onValue(ref(db, 'timer_value'), (snap) => {
             const time = snap.val() || 0;
             document.getElementById('timer-text').innerText = time;
             const circle = document.getElementById('progress-bar');
-            const offset = 502 - (time / 30) * 502;
-            circle.style.strokeDashoffset = offset;
-            circle.style.stroke = time <= 5 ? '#ff003c' : '#facc15';
+            circle.style.strokeDashoffset = 502 - (time / 30) * 502;
         });
 
-        // 4. مراقبة البازر
         onValue(ref(db, 'buzzer_winner'), (snap) => {
             const winner = snap.val();
             const ov = document.getElementById('buzzer-overlay');
@@ -230,7 +212,7 @@
             }
         });
 
-        // 5. مراقبة النتيجة (صح / خطأ)
+        // المنطق المطلوب عند ضغط صح/خطأ في الأدمن
         onValue(ref(db, 'answer_result'), (snap) => {
             const res = snap.val();
             if(!res) return;
@@ -240,27 +222,35 @@
             const icon = document.getElementById('status-icon');
             
             if(res === 'correct') {
-                overlay.style.backgroundColor = 'rgba(22, 163, 74, 0.9)';
+                overlay.className = "overlay-screen bg-correct";
                 title.innerText = "إجابة صحيحة";
                 icon.innerText = "✅";
                 document.getElementById('snd-correct').play();
                 
-                // إظهار الإجابة وإخفاء السؤال
-                document.getElementById('q-container').style.opacity = '1';
-                document.getElementById('answer-reveal').style.display = 'block';
-                document.getElementById('timer-ui').style.opacity = '0';
+                // التعديلات المطلوبة:
+                document.getElementById('question-text').style.display = 'none'; // إخفاء السؤال
+                document.getElementById('timer-ui').style.opacity = '0'; // إخفاء المؤقت
+                document.getElementById('answer-reveal').style.display = 'block'; // إظهار الإجابة
             } else {
-                overlay.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
+                overlay.className = "overlay-screen bg-wrong";
                 title.innerText = "إجابة خاطئة";
                 icon.innerText = "❌";
                 document.getElementById('snd-wrong').play();
             }
 
             overlay.style.display = 'flex';
+
+            // بعد 5 ثواني تختفي الشاشة وتنتظر سؤالاً جديداً
             setTimeout(() => {
                 overlay.style.display = 'none';
+                if(res === 'correct') {
+                    // مسح السؤال القديم والانتظار
+                    document.getElementById('question-text').innerText = "بانتظار السؤال التالي...";
+                    document.getElementById('question-text').style.display = 'block';
+                    document.getElementById('answer-reveal').style.display = 'none';
+                }
                 set(ref(db, 'answer_result'), null);
-            }, 3500);
+            }, 5000);
         });
 
     </script>
