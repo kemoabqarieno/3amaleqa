@@ -41,7 +41,6 @@
             box-shadow: none;
         }
 
-        /* تأثير الضوء عند الفوز */
         .winner-flash {
             animation: flash 0.5s infinite alternate;
         }
@@ -50,37 +49,47 @@
             to { box-shadow: 0 0 60px #facc15; border-color: #facc15; }
         }
 
-        .glass-input {
+        .glass-select {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             padding: 15px; border-radius: 12px;
-            text-align: center; color: white; width: 80%;
-            margin-bottom: 20px; outline: none;
+            color: white; width: 100%;
+            margin-bottom: 15px; outline: none;
+            appearance: none;
         }
+        select option { background: #111; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="setup-ui" class="flex flex-col items-center w-full max-w-xs">
-        <h2 class="text-2xl mb-6 font-black text-red-500">تعريف العملاق 👤</h2>
-        <input type="text" id="playerName" placeholder="اسمك" class="glass-input">
-        <input type="text" id="playerTeam" placeholder="اسم فريقك (نفس المكتوب للأدمن)" class="glass-input">
-        <button onclick="saveIdentity()" class="w-full bg-red-600 py-4 rounded-xl font-black">دخول الحلبة</button>
+    <div id="setup-ui" class="flex flex-col items-center w-full max-w-xs p-6 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-xl">
+        <h2 class="text-3xl mb-8 font-black text-red-500 text-center">دخول الحلبة ⚔️</h2>
+        
+        <label class="w-full text-xs mb-2 text-slate-400 mr-2">اختر الفريق:</label>
+        <select id="teamSelect" class="glass-select" onchange="loadPlayers(this.value)">
+            <option value="">جاري تحميل الفرق...</option>
+        </select>
+
+        <label class="w-full text-xs mb-2 text-slate-400 mr-2">اختر اسمك:</label>
+        <select id="playerSelect" class="glass-select">
+            <option value="">اختر الفريق أولاً</option>
+        </select>
+
+        <button onclick="saveIdentity()" class="w-full bg-red-600 hover:bg-red-500 py-4 mt-4 rounded-xl font-black transition-all shadow-lg shadow-red-600/20">تأكيد الدخول</button>
     </div>
 
     <div id="buzzer-ui" class="hidden flex flex-col items-center">
-        <div id="status-text" class="mb-8 text-xl font-bold text-slate-400">جاهز للهجوم...</div>
+        <div id="status-text" class="mb-8 text-2xl font-bold text-slate-400">جاهز للهجوم...</div>
         
         <button id="mainBuzzer" onclick="hitBuzzer()" class="buzzer-btn">
             <span class="text-white text-4xl font-black select-none">اضغط!</span>
         </button>
 
-        <div class="mt-12 text-slate-500 text-sm italic" id="identity-tag"></div>
-        <button onclick="clearIdentity()" class="mt-4 text-xs text-slate-700 underline">تغيير الاسم</button>
+        <div class="mt-12 p-4 bg-white/5 rounded-2xl border border-white/10 text-slate-300 text-sm font-bold" id="identity-tag"></div>
+        <button onclick="clearIdentity()" class="mt-6 text-xs text-slate-600 hover:text-red-500 transition-colors">تغيير الحساب</button>
     </div>
 
-    <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
-    <audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+    <audio id="buzzerSound" src="بازل.mp3" preload="auto"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -98,12 +107,41 @@
 
         let myName = localStorage.getItem('giant_name');
         let myTeam = localStorage.getItem('giant_team');
+        let allTeamsData = {};
 
-        // التحقق من الهوية
+        // 1. تحميل الفرق واللاعبين من السيرفر
+        onValue(ref(db, 'teams'), (snap) => {
+            allTeamsData = snap.val() || {};
+            const teamSelect = document.getElementById('teamSelect');
+            teamSelect.innerHTML = '<option value="">--- اختر فريقك ---</option>';
+            
+            Object.keys(allTeamsData).forEach(teamName => {
+                const opt = document.createElement('option');
+                opt.value = teamName;
+                opt.innerText = teamName;
+                teamSelect.appendChild(opt);
+            });
+        });
+
+        window.loadPlayers = (teamName) => {
+            const playerSelect = document.getElementById('playerSelect');
+            playerSelect.innerHTML = '<option value="">--- اختر اسمك ---</option>';
+            if(!teamName || !allTeamsData[teamName]) return;
+
+            const players = allTeamsData[teamName].players || [];
+            players.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.name;
+                opt.innerText = p.name;
+                playerSelect.appendChild(opt);
+            });
+        };
+
         window.saveIdentity = () => {
-            const n = document.getElementById('playerName').value;
-            const t = document.getElementById('playerTeam').value;
-            if(!n || !t) return alert("اكتب اسمك وفريقك يا بطل!");
+            const t = document.getElementById('teamSelect').value;
+            const n = document.getElementById('playerSelect').value;
+            if(!t || !n) return alert("اختر فريقك واسمك أولاً!");
+            
             localStorage.setItem('giant_name', n);
             localStorage.setItem('giant_team', t);
             location.reload();
@@ -114,26 +152,29 @@
             location.reload();
         };
 
+        // تفعيل واجهة البازر إذا كان مسجلاً
         if(myName && myTeam) {
             document.getElementById('setup-ui').classList.add('hidden');
             document.getElementById('buzzer-ui').classList.remove('hidden');
-            document.getElementById('identity-tag').innerText = `المتسابق: ${myName} | فريق: ${myTeam}`;
+            document.getElementById('identity-tag').innerText = `🎖️ الفريق: ${myTeam} | 👤 اللاعب: ${myName}`;
         }
 
         const btn = document.getElementById('mainBuzzer');
         const status = document.getElementById('status-text');
+        const bSound = document.getElementById('buzzerSound');
 
-        // المنطق العاقل: مراقبة حالة البازر من السيرفر
+        // مراقبة حالة البازر
         onValue(ref(db, 'buzzer_status'), (snap) => {
-            const state = snap.val();
-            if(state === 'open') {
-                enableBuzzer();
+            if(snap.val() === 'open') {
+                btn.classList.remove('disabled');
+                status.innerText = "انقض الآن! 🔥";
             } else {
-                disableBuzzer("انتظر الإشارة...");
+                btn.classList.add('disabled');
+                status.innerText = "انتظر الإشارة...";
             }
         });
 
-        // مراقبة لو فيه فائز بالفعل
+        // مراقبة الفائز
         onValue(ref(db, 'buzzer_winner'), (snap) => {
             const winner = snap.val();
             if(winner && winner.name) {
@@ -141,9 +182,10 @@
                     status.innerText = "أنت الأسرع! 🏆";
                     status.classList.add('text-yellow-500');
                     btn.classList.add('winner-flash');
-                    document.getElementById('winSound').play();
+                    bSound.play(); // تشغيل صوت بازل.mp3
                 } else {
-                    disableBuzzer(`خطفها ${winner.name}! 💨`);
+                    btn.classList.add('disabled');
+                    status.innerText = `سبقك ${winner.name}! 💨`;
                 }
             } else {
                 btn.classList.remove('winner-flash');
@@ -154,34 +196,17 @@
         window.hitBuzzer = () => {
             if(btn.classList.contains('disabled')) return;
 
-            document.getElementById('clickSound').play();
-
-            // استخدام Transaction لضمان أن شخص واحد فقط يفوز في نفس الميكرو-ثانية
-            runTransaction(ref(db, 'buzzer_winner'), (currentData) => {
-                if (currentData === "" || currentData === null) {
-                    // السيرفر فاضي؟ مبروك إنت الفائز
+            runTransaction(ref(db, 'buzzer_winner'), (current) => {
+                if (!current) {
                     return { name: myName, team: myTeam, time: Date.now() };
-                } else {
-                    // فيه حد سبقك؟ لا تغير البيانات
-                    return; 
                 }
-            }).then((result) => {
-                if(result.committed) {
-                    // لو العملية نجحت، اقفل البازر عند الكل
+                return; 
+            }).then((res) => {
+                if(res.committed) {
                     set(ref(db, 'buzzer_status'), 'locked');
                 }
             });
         };
-
-        function disableBuzzer(msg) {
-            btn.classList.add('disabled');
-            status.innerText = msg;
-        }
-
-        function enableBuzzer() {
-            btn.classList.remove('disabled');
-            status.innerText = "انقض الآن! 🔥";
-        }
 
     </script>
 </body>
