@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غرفة عمليات العمالقة | Control Center 🕹️</title>
+    <title>ساحة العمالقة | The Arena 🏆</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -12,90 +12,101 @@
         @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
 
         :root {
-            --neon-red: #ff003c; --neon-gold: #facc15; --bg-dark: #0a0505;
+            --neon-red: #ff003c; --neon-blue: #00d2ff; --neon-gold: #facc15; --bg-dark: #020617;
         }
 
         body {
-            background: radial-gradient(circle at center, #101827 0%, var(--bg-dark) 100%);
-            color: white; font-family: 'Cairo', sans-serif; min-height: 100vh;
+            background-color: var(--bg-dark);
+            color: white; overflow: hidden; height: 100vh; margin: 0;
+            font-family: 'Cairo', sans-serif; display: flex; flex-direction: column;
+            transition: background-color 0.3s ease;
         }
 
-        .glass {
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 0, 60, 0.2);
+        /* كلاسات الألوان الإجبارية */
+        body.correct-bg { background-color: #16a34a !important; background-image: none !important; }
+        body.wrong-bg { background-color: #dc2626 !important; background-image: none !important; }
+
+        .team-card {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 20vw; min-width: 250px; padding: 40px 20px;
+            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; z-index: 20;
+        }
+        .team-left { left: 0; border-radius: 0 40px 40px 0; border-right: 8px solid var(--neon-red); }
+        .team-right { right: 0; border-radius: 40px 0 0 40px; border-left: 8px solid var(--neon-blue); }
+
+        .score-num { font-family: 'DGRawnaq', sans-serif; font-size: 8rem; line-height: 1; }
+
+        .main-arena {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 0 22vw; z-index: 10;
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .active-tab { border-bottom: 4px solid var(--neon-red); color: var(--neon-red); }
-        
-        .team-box {
-            padding: 15px; border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; cursor: pointer; text-align: center;
+        .q-wrapper {
+            width: 100%; text-align: center; background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px; padding: 60px 40px; border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .team-box.selected { border-color: var(--neon-gold); background: rgba(250, 204, 21, 0.1); }
+
+        .question-text { font-family: 'Amira', sans-serif; font-size: 5.5rem; line-height: 1.2; }
+
+        .answer-reveal {
+            margin-top: 20px; font-family: 'Amira'; font-size: 5rem;
+            color: #facc15; display: none; /* يظهر فقط عند ضغط الأدمن */
+        }
+
+        .timer-box {
+            position: relative; width: 180px; height: 180px; margin-top: -90px;
+            background: #020617; border-radius: 50%; padding: 10px;
+        }
+
+        .overlay-screen {
+            position: fixed; inset: 0; z-index: 100; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+        }
     </style>
 </head>
-<body class="p-4 lg:p-8">
+<body>
 
-    <header class="flex justify-between items-center mb-6 glass p-6 rounded-2xl border-b-2 border-red-600/50">
-        <h1 class="text-3xl font-bold text-yellow-500 font-['Amira']">غرفة عمليات العمالقة</h1>
-        <div id="status" class="text-green-400 text-xs font-black">● RADAR ACTIVE</div>
-    </header>
+    <div id="start-overlay" class="fixed inset-0 z-[999] bg-slate-950 flex flex-col items-center justify-center cursor-pointer">
+        <h1 class="text-6xl font-['Belabelo'] text-yellow-500">اضغط للربط مع الأدمن</h1>
+    </div>
 
-    <nav class="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
-        <button onclick="openTab('live')" id="tab-live" class="pb-3 px-6 font-bold active-tab">المباراة</button>
-        <button onclick="openTab('qbank')" id="tab-qbank" class="pb-3 px-6 font-bold text-slate-500">بنك الأسئلة</button>
-        <button onclick="openTab('judge')" id="tab-judge" class="pb-3 px-6 font-bold text-slate-500 relative">
-            التحكيم <span id="judge-notif" class="hidden absolute top-0 right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
-        </button>
-    </nav>
+    <div class="team-card team-left">
+        <h2 id="nameA" class="text-4xl font-['Belabelo']">---</h2>
+        <div id="scoreA" class="score-num text-red-500">00</div>
+    </div>
 
-    <section id="live" class="tab-content active space-y-6">
-        <div class="glass p-6 rounded-2xl">
-            <h3 class="text-red-500 font-bold mb-4">اختر الفريقين (أقصى حد 2):</h3>
-            <div class="grid grid-cols-4 md:grid-cols-8 gap-3" id="teamsGrid"></div>
-            <button onclick="deployMatch()" class="mt-6 w-full bg-red-600 py-4 rounded-xl font-black text-xl">إطلاق المباراة 🚀</button>
-        </div>
-    </section>
+    <div class="team-card team-right">
+        <h2 id="nameB" class="text-4xl font-['Belabelo']">---</h2>
+        <div id="scoreB" class="score-num text-blue-400">00</div>
+    </div>
 
-    <section id="judge" class="tab-content space-y-6">
-        <div id="buzzerPanel" class="glass p-10 rounded-[2.5rem] text-center">
-            <div id="strikeState" class="hidden">
-                <p class="text-red-500 animate-pulse font-black mb-2">هجمة مرتدة من:</p>
-                <h2 id="winnerName" class="text-7xl font-['Belabelo'] mb-6">---</h2>
-                
-                <div class="bg-black/40 p-4 rounded-xl mb-6 border border-white/10">
-                    <p class="text-xs text-slate-400">الإجابة الصحيحة:</p>
-                    <p id="adminAnswerView" class="text-3xl text-green-400 font-bold">---</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-6">
-                    <button onclick="handleJudge('correct')" class="bg-green-600 py-8 rounded-2xl font-black text-4xl shadow-lg active:scale-95 transition-all">صح ✅</button>
-                    <button onclick="handleJudge('wrong')" class="bg-red-600 py-8 rounded-2xl font-black text-4xl shadow-lg active:scale-95 transition-all">خطأ ❌</button>
-                </div>
+    <main class="main-arena">
+        <div class="q-wrapper" id="q-container">
+            <p id="question-text" class="question-text">بانتظار السؤال...</p>
+            <div id="answer-reveal" class="answer-reveal">
+                <span class="text-2xl block font-sans text-white/70">الإجابة:</span>
+                <span id="final-answer">---</span>
             </div>
-            <div id="waitingState" class="py-20 text-slate-500 text-xl font-bold">بانتظار ضغطة البازر...</div>
         </div>
-    </section>
 
-    <section id="qbank" class="tab-content space-y-6">
-        <div class="glass p-6 rounded-2xl">
-            <select id="fileSelector" class="w-full bg-slate-900 p-4 rounded-xl text-yellow-500 font-bold mb-6 border border-yellow-500/30" onchange="loadQuestions()">
-                <option value="">اختر المجلد...</option>
-                <option value="علوم متكامله">علوم متكاملة</option>
-                <option value="عربي">لغة عربية</option>
-                <option value="فلسفه و منطق">فلسفة ومنطق</option>
-            </select>
-            <div id="qGrid" class="grid gap-3"></div>
+        <div class="timer-box" id="timer-ui">
+            <div id="timer-text" class="flex items-center justify-center h-full text-6xl font-black text-yellow-400 font-['DGRawnaq']">30</div>
         </div>
-    </section>
+    </main>
+
+    <div id="buzzer-overlay" class="overlay-screen">
+        <h1 id="winner-name" class="text-9xl font-['Belabelo'] text-white">---</h1>
+        <p class="text-3xl text-yellow-500 mt-4 animate-pulse">يجب أن يجيب الآن!</p>
+    </div>
+
+    <audio id="snd-correct" src="صح.mp3"></audio>
+    <audio id="snd-wrong" src="خطأ.mp3"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
@@ -107,102 +118,70 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let selectedTeams = [];
+        document.getElementById('start-overlay').onclick = () => document.getElementById('start-overlay').style.display = 'none';
 
-        // إدارة التبويبات
-        window.openTab = (id) => {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('tab-'+id).classList.add('active-tab');
-        };
-
-        // جلب الفرق من قاعدة البيانات
+        // 1. تحديث النقاط والأسماء
         onValue(ref(db, 'teams'), (snap) => {
-            const teams = snap.val();
-            const grid = document.getElementById('teamsGrid');
-            grid.innerHTML = '';
-            for(let name in teams) {
-                const div = document.createElement('div');
-                div.className = `team-box ${selectedTeams.includes(name) ? 'selected' : ''}`;
-                div.innerText = name;
-                div.onclick = () => {
-                    if(selectedTeams.includes(name)) selectedTeams = selectedTeams.filter(t => t !== name);
-                    else if(selectedTeams.length < 2) selectedTeams.push(name);
-                    set(ref(db, 'teams'), teams); // لإعادة التحميل فقط
-                };
-                grid.appendChild(div);
+            const teams = snap.val(); if(!teams) return;
+            const names = Object.keys(teams);
+            if(names[0]) { document.getElementById('nameA').innerText = names[0]; document.getElementById('scoreA').innerText = teams[names[0]].score || 0; }
+            if(names[1]) { document.getElementById('nameB').innerText = names[1]; document.getElementById('scoreB').innerText = teams[names[1]].score || 0; }
+        });
+
+        // 2. تحديث السؤال
+        onValue(ref(db, 'current_question'), (snap) => {
+            const q = snap.val();
+            if(q) {
+                document.getElementById('question-text').innerText = q.text;
+                document.getElementById('final-answer').innerText = q.answer;
+                // إعادة الوضع الطبيعي عند إرسال سؤال جديد
+                document.body.classList.remove('correct-bg', 'wrong-bg');
+                document.getElementById('question-text').style.display = 'block';
+                document.getElementById('answer-reveal').style.display = 'none';
+                document.getElementById('timer-ui').style.display = 'block';
             }
         });
 
-        // إطلاق المباراة
-        window.deployMatch = () => {
-            if(selectedTeams.length < 2) return alert("اختر فريقين!");
-            const match = {};
-            selectedTeams.forEach(name => match[name] = { score: 0 });
-            set(ref(db, 'teams'), match);
-            alert("تم إطلاق المباراة بنجاح!");
-            openTab('qbank');
-        };
-
-        // تحميل الأسئلة
-        window.loadQuestions = async () => {
-            const file = document.getElementById('fileSelector').value;
-            if(!file) return;
-            const res = await fetch(`${file}.json`);
-            const data = await res.json();
-            const grid = document.getElementById('qGrid');
-            grid.innerHTML = '';
-            data.forEach(q => {
-                const btn = document.createElement('button');
-                btn.className = "glass p-4 text-right hover:bg-white/5 rounded-xl";
-                btn.innerText = q.text;
-                btn.onclick = () => {
-                    set(ref(db, 'current_question'), { text: q.text, answer: q.answer });
-                    set(ref(db, 'answer_result'), null); // تصفير النتيجة السابقة
-                    set(ref(db, 'buzzer_winner'), null);
-                    document.getElementById('adminAnswerView').innerText = q.answer;
-                    openTab('judge');
-                };
-                grid.appendChild(btn);
-            });
-        };
-
-        // مراقبة البازر
+        // 3. مراقبة البازر
         onValue(ref(db, 'buzzer_winner'), (snap) => {
             const winner = snap.val();
+            const ov = document.getElementById('buzzer-overlay');
             if(winner) {
-                document.getElementById('strikeState').classList.remove('hidden');
-                document.getElementById('waitingState').classList.add('hidden');
-                document.getElementById('winnerName').innerText = winner.name;
-                document.getElementById('judge-notif').classList.remove('hidden');
+                document.getElementById('winner-name').innerText = winner.name;
+                ov.style.display = 'flex';
             } else {
-                document.getElementById('strikeState').classList.add('hidden');
-                document.getElementById('waitingState').classList.remove('hidden');
-                document.getElementById('judge-notif').classList.add('hidden');
+                ov.style.display = 'none';
             }
         });
 
-        // التعامل مع قرار التحكيم (صح / خطأ)
-        window.handleJudge = (result) => {
-            // إرسال النتيجة للشاشة
-            set(ref(db, 'answer_result'), result);
-            
-            // تحديث النقاط إذا كانت الإجابة صحيحة
-            if(result === 'correct') {
-                const winnerName = document.getElementById('winnerName').innerText;
-                const scoreRef = ref(db, `teams/${winnerName}/score`);
-                onValue(scoreRef, (snap) => {
-                    const currentScore = snap.val() || 0;
-                    set(scoreRef, currentScore + 10);
-                }, { onlyOnce: true });
+        // 4. تنفيذ أوامر الأدمن (صح/خطأ) - التعديل الجوهري هنا
+        onValue(ref(db, 'answer_result'), (snap) => {
+            const res = snap.val();
+            if(!res) {
+                // إذا كانت القيمة null نعود للوضع الطبيعي
+                document.body.classList.remove('correct-bg', 'wrong-bg');
+                return;
             }
 
-            // تصفير البازر بعد القرار
-            setTimeout(() => {
-                set(ref(db, 'buzzer_winner'), null);
-            }, 500);
-        };
+            if(res === 'correct') {
+                document.body.className = 'correct-bg'; // الشاشة تنور أخضر
+                document.getElementById('snd-correct').play();
+                
+                // إخفاء السؤال والمؤقت وإظهار الإجابة
+                document.getElementById('question-text').style.display = 'none';
+                document.getElementById('timer-ui').style.display = 'none';
+                document.getElementById('answer-reveal').style.display = 'block';
+            } 
+            else if(res === 'wrong') {
+                document.body.className = 'wrong-bg'; // الشاشة تنور أحمر
+                document.getElementById('snd-wrong').play();
+            }
+        });
+
+        // 5. المؤقت
+        onValue(ref(db, 'timer_value'), (snap) => {
+            document.getElementById('timer-text').innerText = snap.val() || 0;
+        });
 
     </script>
 </body>
