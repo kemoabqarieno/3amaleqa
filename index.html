@@ -7,148 +7,153 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* تعريف الخطوط */
         @font-face { font-family: 'Amira'; src: url('اميرة.ttf'); }
         @font-face { font-family: 'Belabelo'; src: url('بلابيلو.ttf'); }
         @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
-        @font-face { font-family: 'Galaxy'; src: url('جالاكسي.ttf'); }
 
         :root {
             --neon-red: #ff003c;
+            --neon-blue: #00d2ff;
             --neon-gold: #facc15;
-            --neon-blue: #3b82f6;
-            --neon-green: #22c55e;
             --bg-dark: #020617;
         }
 
         body {
-            background: #020617;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 60, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 210, 255, 0.05) 0%, transparent 40%);
             color: white; overflow: hidden; height: 100vh; margin: 0;
             font-family: 'Cairo', sans-serif;
+            display: flex; flex-direction: column;
         }
 
-        #start-overlay {
-            position: fixed; inset: 0; z-index: 999;
-            background: var(--bg-dark);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
-        }
-
-        #particles-js { position: fixed; inset: 0; z-index: -1; }
-
-        .team-panel {
+        /* حاويات الفرق الجانبية - تصميم سينمائي */
+        .team-card {
             position: absolute; top: 50%; transform: translateY(-50%);
-            width: 320px; padding: 50px 25px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(25px);
+            width: 20vw; min-width: 250px; padding: 40px 20px;
+            background: rgba(15, 23, 42, 0.3);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .team-panel.left { left: 0; border-radius: 0 50px 50px 0; border-right: 10px solid var(--neon-red); }
-        .team-panel.right { right: 0; border-radius: 50px 0 0 50px; border-left: 10px solid var(--neon-blue); }
-
-        .score-val { font-family: 'DGRawnaq', sans-serif; font-size: 6rem; line-height: 1; text-shadow: 0 0 30px currentColor; }
-
-        .question-zone { max-width: 1000px; margin: 0 auto; padding-top: 8vh; text-align: center; }
-
-        .q-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 40px; padding: 50px;
-            transition: all 0.5s ease;
+            text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .timer-reactor {
-            width: 200px; height: 200px;
-            margin: 30px auto; position: relative;
-            transition: opacity 0.5s;
+        .team-left { left: 0; border-radius: 0 40px 40px 0; border-right: 8px solid var(--neon-red); box-shadow: -20px 0 50px rgba(255, 0, 60, 0.1); }
+        .team-right { right: 0; border-radius: 40px 0 0 40px; border-left: 8px solid var(--neon-blue); box-shadow: 20px 0 50px rgba(0, 210, 255, 0.1); }
+
+        .score-num {
+            font-family: 'DGRawnaq', sans-serif; font-size: 8rem;
+            line-height: 1; margin-top: 10px;
+            filter: drop-shadow(0 0 15px currentColor);
         }
-        .timer-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+
+        /* منطقة السؤال المركزية */
+        .main-arena {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 0 22vw; z-index: 10;
+        }
+
+        .q-wrapper {
+            width: 100%; position: relative; text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50px; padding: 60px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .question-text {
+            font-family: 'Amira', sans-serif; font-size: 5.5rem;
+            line-height: 1.2; text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* المؤقت المطور */
+        .timer-box {
+            position: relative; width: 180px; height: 180px; margin-top: -90px;
+            background: var(--bg-dark); border-radius: 50%; padding: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
         .timer-circle {
-            fill: none; stroke: var(--neon-gold); stroke-width: 12;
-            stroke-dasharray: 565; transition: 1s linear;
+            fill: none; stroke-width: 10; stroke-linecap: round;
+            stroke-dasharray: 502; stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear, stroke 0.3s;
         }
 
-        .status-overlay {
-            position: fixed; inset: 0; z-index: 200;
+        /* شاشات التنبيه */
+        .overlay-screen {
+            position: fixed; inset: 0; z-index: 100;
             display: none; flex-direction: column; align-items: center; justify-content: center;
+            backdrop-filter: blur(20px); animation: fadeIn 0.4s ease;
         }
 
-        #buzzer-overlay {
-            position: fixed; inset: 0; z-index: 150;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0, 0, 0, 0.9);
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .answer-reveal {
+            margin-top: 30px; font-family: 'Amira'; font-size: 4rem;
+            color: #4ade80; background: rgba(34, 197, 94, 0.1);
+            padding: 15px 50px; border-radius: 20px; border: 2px dashed #4ade80;
+            display: none;
         }
 
-        .answer-box {
-            margin-top: 25px; padding: 25px 60px;
-            background: rgba(34, 197, 94, 0.2);
-            border: 2px solid var(--neon-green); border-radius: 25px;
-            color: #4ade80; font-size: 2.8rem; font-weight: 900;
-            opacity: 0; transform: translateY(20px); transition: 0.6s;
-        }
+        /* لتنسيق الخطوط العريضة */
+        .font-belabelo { font-family: 'Belabelo', sans-serif; }
     </style>
 </head>
 <body>
 
-    <div id="start-overlay" onclick="startArena()">
-        <h1 class="text-6xl font-black text-yellow-500 mb-4" style="font-family: 'Belabelo';">دخول الساحة</h1>
-        <p class="text-white/50 animate-bounce">اضغط لتفعيل الصوت والبدء</p>
+    <div id="start-overlay" class="fixed inset-0 z-[999] bg-slate-950 flex flex-col items-center justify-center cursor-pointer">
+        <div class="text-9xl mb-6">🏆</div>
+        <h1 class="text-7xl font-belabelo text-yellow-500 mb-4">ساحة العمالقة</h1>
+        <p class="text-2xl text-white/40 animate-pulse">اضغط في أي مكان للبدء</p>
     </div>
 
-    <div id="particles-js"></div>
-
-    <div class="team-panel left">
-        <h2 id="nameA" class="text-5xl font-black text-white mb-8" style="font-family: 'Belabelo';">---</h2>
-        <div id="scoreA" class="score-val text-red-500">00</div>
+    <div class="team-card team-left">
+        <h2 id="nameA" class="text-5xl font-belabelo text-white truncate px-2">الفريق الأول</h2>
+        <div id="scoreA" class="score-num text-red-500">00</div>
     </div>
 
-    <div class="team-panel right">
-        <h2 id="nameB" class="text-5xl font-black text-white mb-8" style="font-family: 'Belabelo';">---</h2>
-        <div id="scoreB" class="score-val text-blue-400">00</div>
+    <div class="team-card team-right">
+        <h2 id="nameB" class="text-5xl font-belabelo text-white truncate px-2">الفريق الثاني</h2>
+        <div id="scoreB" class="score-num text-blue-400">00</div>
     </div>
 
-    <main class="question-zone">
-        <div id="q-container" class="q-card">
-            <p id="question-text" class="text-5xl md:text-6xl font-black text-white font-['Amira']">بانتظار السؤال...</p>
+    <main class="main-arena">
+        <div class="q-wrapper" id="q-container">
+            <p id="question-text" class="question-text">بانتظار انطلاق العمالقة...</p>
+            <div id="answer-reveal" class="answer-reveal">
+                <span class="text-xl block text-white/30 font-sans">الإجابة النموذجية</span>
+                <span id="final-answer">---</span>
+            </div>
         </div>
 
-        <div id="timer-container" class="timer-reactor">
-            <svg class="timer-svg" viewBox="0 0 200 200">
-                <circle class="timer-circle" id="circleProgress" cx="100" cy="100" r="90"></circle>
+        <div class="timer-box" id="timer-ui">
+            <svg class="w-full h-full -rotate-90" viewBox="0 0 180 180">
+                <circle cx="90" cy="90" r="80" stroke="rgba(255,255,255,0.1)" stroke-width="10" fill="none" />
+                <circle id="progress-bar" cx="90" cy="90" r="80" class="timer-circle" stroke="var(--neon-gold)" fill="none" />
             </svg>
-            <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-7xl font-black text-yellow-400 font-['DGRawnaq']">30</div>
-        </div>
-
-        <div id="answer-box" class="answer-box mx-auto inline-block">
-            <span class="text-xl block text-white/40 font-bold mb-2">الإجابة:</span>
-            <span id="final-answer" style="font-family: 'Amira';">---</span>
+            <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-6xl font-black text-yellow-400 font-['DGRawnaq']">30</div>
         </div>
     </main>
 
-    <div id="buzzer-overlay">
-        <h1 id="winner-name" class="text-9xl font-black text-white mb-4" style="font-family: 'Belabelo';">---</h1>
-        <p id="winner-team-label" class="text-4xl text-yellow-500 font-bold">انقض على السؤال!</p>
-    </div>
-
-    <div id="correct-overlay" class="status-overlay bg-green-600/90 backdrop-blur-md">
+    <div id="buzzer-overlay" class="overlay-screen bg-black/90">
         <div class="text-center">
-            <div class="text-[15rem] mb-4">✅</div>
-            <h1 class="text-9xl font-black text-white" style="font-family: 'Belabelo';">إجابة صحيحة</h1>
+            <p class="text-yellow-500 text-3xl font-bold mb-4">أسرع هجمة من:</p>
+            <h1 id="winner-name" class="text-[12rem] font-belabelo text-white leading-none">---</h1>
+            <div class="mt-8 text-4xl text-white/50 animate-bounce">مستعد للإجابة...</div>
         </div>
     </div>
 
-    <div id="wrong-overlay" class="status-overlay bg-red-600/90 backdrop-blur-md">
-        <div class="text-center text-white">
-            <div class="text-[15rem] mb-4">❌</div>
-            <h1 class="text-9xl font-black" style="font-family: 'Belabelo';">إجابة خاطئة</h1>
-        </div>
+    <div id="status-overlay" class="overlay-screen">
+        <div id="status-icon" class="text-[20rem] mb-4"></div>
+        <h1 id="status-title" class="text-9xl font-belabelo text-white"></h1>
     </div>
 
-    <audio id="buzzSound" src="https://assets.mixkit.co/active_storage/sfx/2959/2959-preview.mp3"></audio>
-    <audio id="correctSound" src="صح.mp3"></audio>
-    <audio id="wrongSound" src="خطأ.mp3"></audio>
+    <audio id="snd-buzz" src="https://assets.mixkit.co/active_storage/sfx/2959/2959-preview.mp3"></audio>
+    <audio id="snd-correct" src="صح.mp3"></audio>
+    <audio id="snd-wrong" src="خطأ.mp3"></audio>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -163,85 +168,99 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // تفعيل الصوت
-        window.startArena = () => {
+        // تفعيل الصوت والبدء
+        document.getElementById('start-overlay').onclick = () => {
             document.getElementById('start-overlay').style.display = 'none';
-            const sounds = ['buzzSound', 'correctSound', 'wrongSound'];
-            sounds.forEach(id => {
+            ['snd-buzz', 'snd-correct', 'snd-wrong'].forEach(id => {
                 const a = document.getElementById(id);
-                a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(e => {});
+                a.play().then(() => { a.pause(); a.currentTime = 0; });
             });
         };
 
-        particlesJS('particles-js', {
-            particles: { number: { value: 50 }, color: { value: "#3b82f6" }, opacity: { value: 0.3 }, move: { enable: true, speed: 1 } }
+        // 1. عرض أسماء الفرق والنتائج الحقيقية
+        onValue(ref(db, 'teams'), (snap) => {
+            const teams = snap.val();
+            if (!teams) return;
+            const names = Object.keys(teams);
+            
+            // الفريق الأول
+            if (names[0]) {
+                document.getElementById('nameA').innerText = names[0];
+                document.getElementById('scoreA').innerText = (teams[names[0]].score || 0).toString().padStart(2, '0');
+            }
+            // الفريق الثاني
+            if (names[1]) {
+                document.getElementById('nameB').innerText = names[1];
+                document.getElementById('scoreB').innerText = (teams[names[1]].score || 0).toString().padStart(2, '0');
+            }
         });
 
-        // مراقبة السؤال والمؤقت
+        // 2. مراقبة السؤال
         onValue(ref(db, 'current_question'), (snap) => {
             const q = snap.val();
             if(q) {
                 document.getElementById('question-text').innerText = q.text;
                 document.getElementById('final-answer').innerText = q.answer;
-                document.getElementById('answer-box').style.opacity = "0";
-                document.getElementById('q-container').style.opacity = "1";
-                document.getElementById('timer-container').style.opacity = "1";
+                document.getElementById('answer-reveal').style.display = 'none';
+                document.getElementById('q-container').style.opacity = '1';
+                document.getElementById('timer-ui').style.opacity = '1';
             }
         });
 
+        // 3. مراقبة المؤقت
         onValue(ref(db, 'timer_value'), (snap) => {
             const time = snap.val() || 0;
             document.getElementById('timer-text').innerText = time;
-            const offset = 565 - (time / 30) * 565;
-            document.getElementById('circleProgress').style.strokeDashoffset = offset;
+            const circle = document.getElementById('progress-bar');
+            const offset = 502 - (time / 30) * 502;
+            circle.style.strokeDashoffset = offset;
+            circle.style.stroke = time <= 5 ? '#ff003c' : '#facc15';
         });
 
-        // مراقبة البازر
+        // 4. مراقبة البازر
         onValue(ref(db, 'buzzer_winner'), (snap) => {
             const winner = snap.val();
             const ov = document.getElementById('buzzer-overlay');
             if(winner && winner.name) {
                 document.getElementById('winner-name').innerText = winner.name;
                 ov.style.display = 'flex';
-                document.getElementById('buzzSound').play();
+                document.getElementById('snd-buzz').play();
             } else {
                 ov.style.display = 'none';
             }
         });
 
-        // التعديل المطلوب: عند ضغط صح أو خطأ في الأدمن
+        // 5. مراقبة النتيجة (صح / خطأ)
         onValue(ref(db, 'answer_result'), (snap) => {
-            const result = snap.val();
-            if(!result) return;
+            const res = snap.val();
+            if(!res) return;
 
-            const isCorrect = result === 'correct';
-            const overlay = isCorrect ? document.getElementById('correct-overlay') : document.getElementById('wrong-overlay');
-            const sound = isCorrect ? document.getElementById('correctSound') : document.getElementById('wrongSound');
-
-            // إظهار النتيجة فوراً
-            overlay.style.display = 'flex';
-            sound.play();
-
-            if(isCorrect) {
-                // 1. إظهار الإجابة النموذجية
-                document.getElementById('answer-box').style.opacity = "1";
-                document.getElementById('answer-box').style.transform = "translateY(0)";
+            const overlay = document.getElementById('status-overlay');
+            const title = document.getElementById('status-title');
+            const icon = document.getElementById('status-icon');
+            
+            if(res === 'correct') {
+                overlay.style.backgroundColor = 'rgba(22, 163, 74, 0.9)';
+                title.innerText = "إجابة صحيحة";
+                icon.innerText = "✅";
+                document.getElementById('snd-correct').play();
                 
-                // 2. إخفاء السؤال والمؤقت
-                document.getElementById('q-container').style.opacity = "0";
-                document.getElementById('timer-container').style.opacity = "0";
+                // إظهار الإجابة وإخفاء السؤال
+                document.getElementById('q-container').style.opacity = '1';
+                document.getElementById('answer-reveal').style.display = 'block';
+                document.getElementById('timer-ui').style.opacity = '0';
+            } else {
+                overlay.style.backgroundColor = 'rgba(220, 38, 38, 0.9)';
+                title.innerText = "إجابة خاطئة";
+                icon.innerText = "❌";
+                document.getElementById('snd-wrong').play();
             }
 
-            // الانتظار 4 ثواني ثم العودة للحالة الطبيعية
+            overlay.style.display = 'flex';
             setTimeout(() => {
                 overlay.style.display = 'none';
-                if(isCorrect) {
-                    document.getElementById('question-text').innerText = "بانتظار السؤال الجديد...";
-                    document.getElementById('q-container').style.opacity = "1";
-                    document.getElementById('answer-box').style.opacity = "0";
-                }
                 set(ref(db, 'answer_result'), null);
-            }, 4000);
+            }, 3500);
         });
 
     </script>
