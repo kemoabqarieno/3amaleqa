@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ساحة العمالقة | The Arena 🏆</title>
+    <title>غرفة عمليات العمالقة | Control Center 🕹️</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -12,140 +12,90 @@
         @font-face { font-family: 'DGRawnaq'; src: url('دي جي راونق.ttf'); }
 
         :root {
-            --neon-red: #ff003c;
-            --neon-blue: #00d2ff;
-            --neon-gold: #facc15;
-            --bg-dark: #020617;
+            --neon-red: #ff003c; --neon-gold: #facc15; --bg-dark: #0a0505;
         }
 
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(255, 0, 60, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(0, 210, 255, 0.05) 0%, transparent 40%);
-            color: white; overflow: hidden; height: 100vh; margin: 0;
-            font-family: 'Cairo', sans-serif;
-            display: flex; flex-direction: column;
+            background: radial-gradient(circle at center, #101827 0%, var(--bg-dark) 100%);
+            color: white; font-family: 'Cairo', sans-serif; min-height: 100vh;
         }
 
-        .team-card {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 20vw; min-width: 250px; padding: 40px 20px;
-            background: rgba(15, 23, 42, 0.3);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center; transition: all 0.5s ease;
-            z-index: 20;
+        .glass {
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 0, 60, 0.2);
         }
 
-        .team-left { left: 0; border-radius: 0 40px 40px 0; border-right: 8px solid var(--neon-red); }
-        .team-right { right: 0; border-radius: 40px 0 0 40px; border-left: 8px solid var(--neon-blue); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .score-num {
-            font-family: 'DGRawnaq', sans-serif; font-size: 8rem;
-            line-height: 1; filter: drop-shadow(0 0 15px currentColor);
+        .active-tab { border-bottom: 4px solid var(--neon-red); color: var(--neon-red); }
+        
+        .team-box {
+            padding: 15px; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; cursor: pointer; text-align: center;
         }
-
-        .main-arena {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 0 22vw; z-index: 10;
-        }
-
-        .q-wrapper {
-            width: 100%; text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 50px; padding: 60px 40px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s ease;
-        }
-
-        .question-text {
-            font-family: 'Amira', sans-serif; font-size: 5.5rem;
-            line-height: 1.2;
-        }
-
-        .timer-box {
-            position: relative; width: 180px; height: 180px; margin-top: -90px;
-            background: var(--bg-dark); border-radius: 50%; padding: 10px;
-            transition: all 0.5s ease;
-        }
-
-        .timer-circle {
-            fill: none; stroke-width: 10; stroke-linecap: round;
-            stroke-dasharray: 502; transition: stroke-dashoffset 1s linear;
-        }
-
-        .overlay-screen {
-            position: fixed; inset: 0; z-index: 100;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            backdrop-filter: blur(20px);
-        }
-
-        .answer-reveal {
-            margin-top: 30px; font-family: 'Amira'; font-size: 5rem;
-            color: #4ade80; background: rgba(34, 197, 94, 0.1);
-            padding: 20px 60px; border-radius: 30px; border: 3px dashed #4ade80;
-            display: none; /* مخفي افتراضياً */
-        }
-
-        /* تنسيق الألوان عند الفوز أو الخسارة */
-        .bg-correct { background-color: rgba(22, 163, 74, 0.95) !important; }
-        .bg-wrong { background-color: rgba(220, 38, 38, 0.95) !important; }
+        .team-box.selected { border-color: var(--neon-gold); background: rgba(250, 204, 21, 0.1); }
     </style>
 </head>
-<body>
+<body class="p-4 lg:p-8">
 
-    <div id="start-overlay" class="fixed inset-0 z-[999] bg-slate-950 flex flex-col items-center justify-center cursor-pointer">
-        <h1 class="text-7xl font-['Belabelo'] text-yellow-500 mb-4">ساحة العمالقة</h1>
-        <p class="text-2xl text-white/40 animate-pulse">اضغط للبدء</p>
-    </div>
+    <header class="flex justify-between items-center mb-6 glass p-6 rounded-2xl border-b-2 border-red-600/50">
+        <h1 class="text-3xl font-bold text-yellow-500 font-['Amira']">غرفة عمليات العمالقة</h1>
+        <div id="status" class="text-green-400 text-xs font-black">● RADAR ACTIVE</div>
+    </header>
 
-    <div class="team-card team-left">
-        <h2 id="nameA" class="text-5xl font-['Belabelo'] text-white truncate">---</h2>
-        <div id="scoreA" class="score-num text-red-500">00</div>
-    </div>
+    <nav class="flex gap-4 mb-6 border-b border-slate-700 overflow-x-auto">
+        <button onclick="openTab('live')" id="tab-live" class="pb-3 px-6 font-bold active-tab">المباراة</button>
+        <button onclick="openTab('qbank')" id="tab-qbank" class="pb-3 px-6 font-bold text-slate-500">بنك الأسئلة</button>
+        <button onclick="openTab('judge')" id="tab-judge" class="pb-3 px-6 font-bold text-slate-500 relative">
+            التحكيم <span id="judge-notif" class="hidden absolute top-0 right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
+        </button>
+    </nav>
 
-    <div class="team-card team-right">
-        <h2 id="nameB" class="text-5xl font-['Belabelo'] text-white truncate">---</h2>
-        <div id="scoreB" class="score-num text-blue-400">00</div>
-    </div>
+    <section id="live" class="tab-content active space-y-6">
+        <div class="glass p-6 rounded-2xl">
+            <h3 class="text-red-500 font-bold mb-4">اختر الفريقين (أقصى حد 2):</h3>
+            <div class="grid grid-cols-4 md:grid-cols-8 gap-3" id="teamsGrid"></div>
+            <button onclick="deployMatch()" class="mt-6 w-full bg-red-600 py-4 rounded-xl font-black text-xl">إطلاق المباراة 🚀</button>
+        </div>
+    </section>
 
-    <main class="main-arena">
-        <div class="q-wrapper" id="q-container">
-            <p id="question-text" class="question-text">بانتظار السؤال...</p>
-            <div id="answer-reveal" class="answer-reveal">
-                <span class="text-xl block text-white/50 font-sans mb-2">الإجابة النموذجية</span>
-                <span id="final-answer">---</span>
+    <section id="judge" class="tab-content space-y-6">
+        <div id="buzzerPanel" class="glass p-10 rounded-[2.5rem] text-center">
+            <div id="strikeState" class="hidden">
+                <p class="text-red-500 animate-pulse font-black mb-2">هجمة مرتدة من:</p>
+                <h2 id="winnerName" class="text-7xl font-['Belabelo'] mb-6">---</h2>
+                
+                <div class="bg-black/40 p-4 rounded-xl mb-6 border border-white/10">
+                    <p class="text-xs text-slate-400">الإجابة الصحيحة:</p>
+                    <p id="adminAnswerView" class="text-3xl text-green-400 font-bold">---</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <button onclick="handleJudge('correct')" class="bg-green-600 py-8 rounded-2xl font-black text-4xl shadow-lg active:scale-95 transition-all">صح ✅</button>
+                    <button onclick="handleJudge('wrong')" class="bg-red-600 py-8 rounded-2xl font-black text-4xl shadow-lg active:scale-95 transition-all">خطأ ❌</button>
+                </div>
             </div>
+            <div id="waitingState" class="py-20 text-slate-500 text-xl font-bold">بانتظار ضغطة البازر...</div>
         </div>
+    </section>
 
-        <div class="timer-box" id="timer-ui">
-            <svg class="w-full h-full -rotate-90" viewBox="0 0 180 180">
-                <circle cx="90" cy="90" r="80" stroke="rgba(255,255,255,0.1)" stroke-width="10" fill="none" />
-                <circle id="progress-bar" cx="90" cy="90" r="80" class="timer-circle" stroke="var(--neon-gold)" fill="none" />
-            </svg>
-            <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-6xl font-black text-yellow-400 font-['DGRawnaq']">30</div>
+    <section id="qbank" class="tab-content space-y-6">
+        <div class="glass p-6 rounded-2xl">
+            <select id="fileSelector" class="w-full bg-slate-900 p-4 rounded-xl text-yellow-500 font-bold mb-6 border border-yellow-500/30" onchange="loadQuestions()">
+                <option value="">اختر المجلد...</option>
+                <option value="علوم متكامله">علوم متكاملة</option>
+                <option value="عربي">لغة عربية</option>
+                <option value="فلسفه و منطق">فلسفة ومنطق</option>
+            </select>
+            <div id="qGrid" class="grid gap-3"></div>
         </div>
-    </main>
-
-    <div id="buzzer-overlay" class="overlay-screen bg-black/90">
-        <h1 id="winner-name" class="text-[12rem] font-['Belabelo'] text-white leading-none">---</h1>
-        <div class="mt-8 text-4xl text-yellow-500 animate-bounce">مستعد للإجابة...</div>
-    </div>
-
-    <div id="status-overlay" class="overlay-screen">
-        <div id="status-icon" class="text-[20rem] mb-4"></div>
-        <h1 id="status-title" class="text-9xl font-['Belabelo'] text-white"></h1>
-    </div>
-
-    <audio id="snd-buzz" src="https://assets.mixkit.co/active_storage/sfx/2959/2959-preview.mp3"></audio>
-    <audio id="snd-correct" src="صح.mp3"></audio>
-    <audio id="snd-wrong" src="خطأ.mp3"></audio>
+    </section>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDaI4s3PZ3w3JocR9D2rthbsSx-7_jZFVc",
@@ -157,101 +107,102 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // تشغيل واجهة البداية
-        document.getElementById('start-overlay').onclick = () => {
-            document.getElementById('start-overlay').style.display = 'none';
-            ['snd-buzz', 'snd-correct', 'snd-wrong'].forEach(id => {
-                const a = document.getElementById(id);
-                a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
+        let selectedTeams = [];
+
+        // إدارة التبويبات
+        window.openTab = (id) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('tab-'+id).classList.add('active-tab');
+        };
+
+        // جلب الفرق من قاعدة البيانات
+        onValue(ref(db, 'teams'), (snap) => {
+            const teams = snap.val();
+            const grid = document.getElementById('teamsGrid');
+            grid.innerHTML = '';
+            for(let name in teams) {
+                const div = document.createElement('div');
+                div.className = `team-box ${selectedTeams.includes(name) ? 'selected' : ''}`;
+                div.innerText = name;
+                div.onclick = () => {
+                    if(selectedTeams.includes(name)) selectedTeams = selectedTeams.filter(t => t !== name);
+                    else if(selectedTeams.length < 2) selectedTeams.push(name);
+                    set(ref(db, 'teams'), teams); // لإعادة التحميل فقط
+                };
+                grid.appendChild(div);
+            }
+        });
+
+        // إطلاق المباراة
+        window.deployMatch = () => {
+            if(selectedTeams.length < 2) return alert("اختر فريقين!");
+            const match = {};
+            selectedTeams.forEach(name => match[name] = { score: 0 });
+            set(ref(db, 'teams'), match);
+            alert("تم إطلاق المباراة بنجاح!");
+            openTab('qbank');
+        };
+
+        // تحميل الأسئلة
+        window.loadQuestions = async () => {
+            const file = document.getElementById('fileSelector').value;
+            if(!file) return;
+            const res = await fetch(`${file}.json`);
+            const data = await res.json();
+            const grid = document.getElementById('qGrid');
+            grid.innerHTML = '';
+            data.forEach(q => {
+                const btn = document.createElement('button');
+                btn.className = "glass p-4 text-right hover:bg-white/5 rounded-xl";
+                btn.innerText = q.text;
+                btn.onclick = () => {
+                    set(ref(db, 'current_question'), { text: q.text, answer: q.answer });
+                    set(ref(db, 'answer_result'), null); // تصفير النتيجة السابقة
+                    set(ref(db, 'buzzer_winner'), null);
+                    document.getElementById('adminAnswerView').innerText = q.answer;
+                    openTab('judge');
+                };
+                grid.appendChild(btn);
             });
         };
 
-        // تحديث البيانات (الفرق، السؤال، المؤقت)
-        onValue(ref(db, 'teams'), (snap) => {
-            const teams = snap.val(); if (!teams) return;
-            const names = Object.keys(teams);
-            if (names[0]) {
-                document.getElementById('nameA').innerText = names[0];
-                document.getElementById('scoreA').innerText = (teams[names[0]].score || 0).toString().padStart(2, '0');
-            }
-            if (names[1]) {
-                document.getElementById('nameB').innerText = names[1];
-                document.getElementById('scoreB').innerText = (teams[names[1]].score || 0).toString().padStart(2, '0');
-            }
-        });
-
-        onValue(ref(db, 'current_question'), (snap) => {
-            const q = snap.val();
-            if(q) {
-                document.getElementById('question-text').innerText = q.text;
-                document.getElementById('final-answer').innerText = q.answer;
-                // إعادة تصفير الواجهة للسؤال الجديد
-                document.getElementById('question-text').style.display = 'block';
-                document.getElementById('answer-reveal').style.display = 'none';
-                document.getElementById('timer-ui').style.opacity = '1';
-                document.getElementById('q-container').style.opacity = '1';
-            }
-        });
-
-        onValue(ref(db, 'timer_value'), (snap) => {
-            const time = snap.val() || 0;
-            document.getElementById('timer-text').innerText = time;
-            const circle = document.getElementById('progress-bar');
-            circle.style.strokeDashoffset = 502 - (time / 30) * 502;
-        });
-
+        // مراقبة البازر
         onValue(ref(db, 'buzzer_winner'), (snap) => {
             const winner = snap.val();
-            const ov = document.getElementById('buzzer-overlay');
-            if(winner && winner.name) {
-                document.getElementById('winner-name').innerText = winner.name;
-                ov.style.display = 'flex';
-                document.getElementById('snd-buzz').play();
+            if(winner) {
+                document.getElementById('strikeState').classList.remove('hidden');
+                document.getElementById('waitingState').classList.add('hidden');
+                document.getElementById('winnerName').innerText = winner.name;
+                document.getElementById('judge-notif').classList.remove('hidden');
             } else {
-                ov.style.display = 'none';
+                document.getElementById('strikeState').classList.add('hidden');
+                document.getElementById('waitingState').classList.remove('hidden');
+                document.getElementById('judge-notif').classList.add('hidden');
             }
         });
 
-        // المنطق المطلوب عند ضغط صح/خطأ في الأدمن
-        onValue(ref(db, 'answer_result'), (snap) => {
-            const res = snap.val();
-            if(!res) return;
-
-            const overlay = document.getElementById('status-overlay');
-            const title = document.getElementById('status-title');
-            const icon = document.getElementById('status-icon');
+        // التعامل مع قرار التحكيم (صح / خطأ)
+        window.handleJudge = (result) => {
+            // إرسال النتيجة للشاشة
+            set(ref(db, 'answer_result'), result);
             
-            if(res === 'correct') {
-                overlay.className = "overlay-screen bg-correct";
-                title.innerText = "إجابة صحيحة";
-                icon.innerText = "✅";
-                document.getElementById('snd-correct').play();
-                
-                // التعديلات المطلوبة:
-                document.getElementById('question-text').style.display = 'none'; // إخفاء السؤال
-                document.getElementById('timer-ui').style.opacity = '0'; // إخفاء المؤقت
-                document.getElementById('answer-reveal').style.display = 'block'; // إظهار الإجابة
-            } else {
-                overlay.className = "overlay-screen bg-wrong";
-                title.innerText = "إجابة خاطئة";
-                icon.innerText = "❌";
-                document.getElementById('snd-wrong').play();
+            // تحديث النقاط إذا كانت الإجابة صحيحة
+            if(result === 'correct') {
+                const winnerName = document.getElementById('winnerName').innerText;
+                const scoreRef = ref(db, `teams/${winnerName}/score`);
+                onValue(scoreRef, (snap) => {
+                    const currentScore = snap.val() || 0;
+                    set(scoreRef, currentScore + 10);
+                }, { onlyOnce: true });
             }
 
-            overlay.style.display = 'flex';
-
-            // بعد 5 ثواني تختفي الشاشة وتنتظر سؤالاً جديداً
+            // تصفير البازر بعد القرار
             setTimeout(() => {
-                overlay.style.display = 'none';
-                if(res === 'correct') {
-                    // مسح السؤال القديم والانتظار
-                    document.getElementById('question-text').innerText = "بانتظار السؤال التالي...";
-                    document.getElementById('question-text').style.display = 'block';
-                    document.getElementById('answer-reveal').style.display = 'none';
-                }
-                set(ref(db, 'answer_result'), null);
-            }, 5000);
-        });
+                set(ref(db, 'buzzer_winner'), null);
+            }, 500);
+        };
 
     </script>
 </body>
