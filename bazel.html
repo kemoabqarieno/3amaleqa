@@ -109,13 +109,14 @@
         let myTeam = localStorage.getItem('giant_team');
         let allTeamsData = {};
 
-        // 1. تحميل الفرق واللاعبين من السيرفر
+        // 1. تحميل الفرق من السيرفر
         onValue(ref(db, 'teams'), (snap) => {
             allTeamsData = snap.val() || {};
             const teamSelect = document.getElementById('teamSelect');
             teamSelect.innerHTML = '<option value="">--- اختر فريقك ---</option>';
             
             Object.keys(allTeamsData).forEach(teamName => {
+                if(teamName === "undefined") return; // تجاهل أي بيانات غير معرفة
                 const opt = document.createElement('option');
                 opt.value = teamName;
                 opt.innerText = teamName;
@@ -123,17 +124,24 @@
             });
         });
 
+        // 2. تحميل اللاعبين بناءً على الفريق المختار
         window.loadPlayers = (teamName) => {
             const playerSelect = document.getElementById('playerSelect');
             playerSelect.innerHTML = '<option value="">--- اختر اسمك ---</option>';
+            
             if(!teamName || !allTeamsData[teamName]) return;
 
             const players = allTeamsData[teamName].players || [];
+            
             players.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.name;
-                opt.innerText = p.name;
-                playerSelect.appendChild(opt);
+                if (p) { 
+                    // التحقق إذا كان اللاعب مخزن كنص مباشر أو كائن
+                    const playerName = (typeof p === 'object') ? p.name : p; 
+                    const opt = document.createElement('option');
+                    opt.value = playerName;
+                    opt.innerText = playerName;
+                    playerSelect.appendChild(opt);
+                }
             });
         };
 
@@ -182,7 +190,7 @@
                     status.innerText = "أنت الأسرع! 🏆";
                     status.classList.add('text-yellow-500');
                     btn.classList.add('winner-flash');
-                    bSound.play(); // تشغيل صوت بازل.mp3
+                    bSound.play().catch(e => console.log("الصوت يحتاج تفاعل مع الصفحة أولاً")); 
                 } else {
                     btn.classList.add('disabled');
                     status.innerText = `سبقك ${winner.name}! 💨`;
