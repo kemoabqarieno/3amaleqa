@@ -1,0 +1,702 @@
+[
+  {
+    "text": "You ........ wash your hands before eating to avoid bacteria.",
+    "answer": "should",
+    "reason": "نصيحة قوية لفعل شيء مفيد (Advice).",
+    "translation": "يجب أن تغسل يديك قبل الأكل لتجنب البكتيريا.",
+    "time": 20
+  },
+  {
+    "text": "If someone stops breathing, you should perform ........ immediately.",
+    "answer": "CPR",
+    "reason": "مصطلح الإنعاش القلبي الرئوي وهو إجراء طبي طارئ.",
+    "translation": "إذا توقف شخص عن التنفس، يجب عليك القيام بالإنعاش القلبي الرئوي فوراً.",
+    "time": 20
+  },
+  {
+    "text": "Dust can cause an ........ to people with weak lungs.",
+    "answer": "allergy",
+    "reason": "كلمة بمعنى 'حساسية' وتناسب سياق الغبار والرئتين.",
+    "translation": "يمكن أن يسبب الغبار حساسية للأشخاص الذين يعانون من ضعف الرئتين.",
+    "time": 20
+  },
+  {
+    "text": "You ........ touch that wire; it’s very dangerous!",
+    "answer": "mustn't",
+    "reason": "استخدام (mustn't) للتحذير من خطر شديد أو منع بات.",
+    "translation": "يجب ألا تلمس ذلك السلك؛ إنه خطير جداً!",
+    "time": 20
+  },
+  {
+    "text": "Change the ........ on your bed at least once a week to stay clean.",
+    "answer": "bedding",
+    "reason": "كلمة (bedding) تعني مفروشات السرير (الملاءات والأغطية).",
+    "translation": "قم بتغيير مفروشات سريرك مرة واحدة على الأقل في الأسبوع لتبقى نظيفة.",
+    "time": 20
+  },
+  {
+    "text": "The house was ........ because of the nearby fire.",
+    "answer": "evacuated",
+    "reason": "فعل بمعنى 'تم إخلاؤه' ويستخدم في حالات الطوارئ والحرائق.",
+    "translation": "تم إخلاء المنزل بسبب الحريق القريب.",
+    "time": 20
+  },
+  {
+    "text": "You ........ leave the door open; it's against the school rules.",
+    "answer": "mustn't",
+    "reason": "التعبير عن المنع بسبب القوانين (Rules).",
+    "translation": "يجب ألا تترك الباب مفتوحاً؛ فهذا ضد قوانين المدرسة.",
+    "time": 20
+  },
+  {
+    "text": "We use a ........ to clean the floor with water and soap.",
+    "answer": "mop",
+    "reason": "كلمة (mop) تعني الممسحة المستخدمة لتنظيف الأرضيات بالماء.",
+    "translation": "نحن نستخدم الممسحة لتنظيف الأرض بالماء والصابون.",
+    "time": 20
+  },
+  {
+    "text": "'CPR' ........ for Cardiopulmonary Resuscitation.",
+    "answer": "stands",
+    "reason": "التعبير (stands for) يعني 'يرمز إلى'.",
+    "translation": "يرمز اختصار 'CPR' إلى الإنعاش القلبي الرئوي.",
+    "time": 20
+  },
+  {
+    "text": "If there is a fire, you must ........ the building through the emergency exit.",
+    "answer": "evacuate",
+    "reason": "فعل 'يخلي' وهو الإجراء المتبع عند حدوث حريق.",
+    "translation": "إذا كان هناك حريق، يجب عليك إخلاء المبنى من خلال مخرج الطوارئ.",
+    "time": 20
+  },
+  {
+    "text": "You ........ see a doctor if that cough continues. (Advice)",
+    "answer": "should",
+    "reason": "استخدام (should) لتقديم النصيحة.",
+    "translation": "يجب عليك رؤية الطبيب إذا استمر ذلك السعال.",
+    "time": 20
+  },
+  {
+    "text": "Dirty surfaces are full of ........ that cause diseases.",
+    "answer": "bacteria",
+    "reason": "الأسطح المتسخة هي البيئة الطبيعية للبكتيريا المسببة للأمراض.",
+    "translation": "الأسطح المتسخة مليئة بالبكتيريا التي تسبب الأمراض.",
+    "time": 20
+  },
+  {
+    "text": "You ........ smoke in hospitals; it is strictly forbidden.",
+    "answer": "mustn't",
+    "reason": "المنع القاطع (Strictly forbidden).",
+    "translation": "يجب ألا تدخن في المستشفيات؛ فهذا ممنوع تماماً.",
+    "time": 20
+  },
+  {
+    "text": "It is ........ to wear a seatbelt while driving.",
+    "answer": "essential",
+    "reason": "كلمة تعني 'ضروري جداً' وتناسب قواعد الأمان.",
+    "translation": "من الضروري ارتداء حزام الأمان أثناء القيادة.",
+    "time": 20
+  },
+  {
+    "text": "If a person is ........ , they cannot breathe easily.",
+    "answer": "choking",
+    "reason": "فعل 'يغص أو يختنق' بسبب شيء عالق في الحلق.",
+    "translation": "إذا كان الشخص يختنق، فلن يستطيع التنفس بسهولة.",
+    "time": 20
+  },
+  {
+    "text": "The first ........ kit should be in every car.",
+    "answer": "aid",
+    "reason": "مصطلح (First aid kit) يعني حقيبة الإسعافات الأولية.",
+    "translation": "يجب أن تكون حقيبة الإسعافات الأولية في كل سيارة.",
+    "time": 20
+  },
+  {
+    "text": "You ........ forget to bring your passport for the flight.",
+    "answer": "mustn't",
+    "reason": "ضرورة قوية جداً لعدم النسيان (التزام شخصي).",
+    "translation": "يجب ألا تنسى إحضار جواز سفرك للرحلة الجوية.",
+    "time": 20
+  },
+  {
+    "text": "To keep the air clean, we should reduce ........ .",
+    "answer": "pollution",
+    "reason": "كلمة 'التلوث' هي الشيء الذي يجب تقليله لنقاء الهواء.",
+    "translation": "للحفاظ على نظافة الهواء، يجب علينا تقليل التلوث.",
+    "time": 20
+  },
+  {
+    "text": "We must follow the ........ of the lab to be safe.",
+    "answer": "rules",
+    "reason": "اتباع 'القواعد' يضمن السلامة في المعامل.",
+    "translation": "يجب علينا اتباع قواعد المختبر لنكون آمنين.",
+    "time": 20
+  },
+  {
+    "text": "A ........ person makes sensible decisions.",
+    "answer": "sensible",
+    "reason": "صفة تعني 'حكيم أو عاقل' وتصف من يتخذ قرارات سليمة.",
+    "translation": "الشخص الحكيم يتخذ قرارات معقولة.",
+    "time": 20
+  },
+  {
+    "text": "If I ........ enough money, I will buy a new smartphone.",
+    "answer": "have",
+    "reason": "الحالة الشرطية الأولى (مضارع بسيط + will).",
+    "translation": "إذا كان لدي مال كافٍ، سأشتري هاتفاً ذكياً جديداً.",
+    "time": 20
+  },
+  {
+    "text": "What ........ if you lost your way in the desert?",
+    "answer": "would happen",
+    "reason": "الحالة الشرطية الثانية (ماضي بسيط + would).",
+    "translation": "ماذا سيحدث لو فقدت طريقك في الصحراء؟",
+    "time": 20
+  },
+  {
+    "text": "Modern cars use ........ to find the correct direction.",
+    "answer": "GPS",
+    "reason": "نظام تحديد المواقع العالمي لتحديد الاتجاهات.",
+    "translation": "تستخدم السيارات الحديثة نظام GPS للعثور على الاتجاه الصحيح.",
+    "time": 20
+  },
+  {
+    "text": "If it ........ , we won't go to the park.",
+    "answer": "rains",
+    "reason": "الحالة الشرطية الأولى (If + مضارع بسيط).",
+    "translation": "إذا أمطرت، لن نذهب إلى الحديقة.",
+    "time": 20
+  },
+  {
+    "text": "A ........ car uses both petrol and electricity.",
+    "answer": "hybrid",
+    "reason": "السيارة 'الهجينة' هي التي تعمل بمصدرين للطاقة.",
+    "translation": "السيارة الهجينة تستخدم البنزين والكهرباء معاً.",
+    "time": 20
+  },
+  {
+    "text": "If I ........ you, I would study harder for the final exam.",
+    "answer": "were",
+    "reason": "تعبير للنصيحة في الحالة الثانية (If I were you).",
+    "translation": "لو كنت مكانك، لدرست بجد أكبر للامتحان النهائي.",
+    "time": 20
+  },
+  {
+    "text": "Computers have had a huge ........ on our daily lives.",
+    "answer": "impact",
+    "reason": "كلمة (impact) تعني تأثير وقوي.",
+    "translation": "لقد كان للحواسيب تأثير هائل على حياتنا اليومية.",
+    "time": 20
+  },
+  {
+    "text": "If he ........ faster, he would have won the race.",
+    "answer": "ran",
+    "reason": "الحالة الشرطية الثانية (If + ماضي بسيط).",
+    "translation": "لو ركض بشكل أسرع، لكان قد فاز بالسباق.",
+    "time": 20
+  },
+  {
+    "text": "We use the ........ to download files from the internet.",
+    "answer": "internet",
+    "reason": "الوسيلة الأساسية لتحميل الملفات.",
+    "translation": "نحن نستخدم الإنترنت لتحميل الملفات من الشبكة.",
+    "time": 20
+  },
+  {
+    "text": "If you heat ice, it ........ . (Fact)",
+    "answer": "melts",
+    "reason": "الحالة الصفرية (Zero Conditional) للحقائق العلمية.",
+    "translation": "إذا قمت بتسخين الثلج، فإنه ينصهر.",
+    "time": 20
+  },
+  {
+    "text": "The internet is a great ........ of information.",
+    "answer": "source",
+    "reason": "كلمة (source) تعني مصدر.",
+    "translation": "الإنترنت هو مصدر رائع للمعلومات.",
+    "time": 20
+  },
+  {
+    "text": "If she doesn't hurry, she ........ the bus.",
+    "answer": "will miss",
+    "reason": "الحالة الشرطية الأولى (نتيجة متوقعة في المستقبل).",
+    "translation": "إذا لم تسرع، فسوف يفوتها الحافلة.",
+    "time": 20
+  },
+  {
+    "text": "A ........ is a machine that can perform human tasks.",
+    "answer": "robot",
+    "reason": "تعريف الروبوت كآلة تؤدي مهام البشر.",
+    "translation": "الروبوت هو آلة يمكنها أداء المهام البشرية.",
+    "time": 20
+  },
+  {
+    "text": "If you ........ a red light, the police will fine you.",
+    "answer": "cross",
+    "reason": "الفعل المناسب لعبور إشارة المرور.",
+    "translation": "إذا عبرت الإشارة الحمراء، سوف تغرمك الشرطة.",
+    "time": 20
+  },
+  {
+    "text": "What would you do if you ........ a million pounds?",
+    "answer": "won",
+    "reason": "الحالة الشرطية الثانية للتخيّل (If + ماضي بسيط).",
+    "translation": "ماذا ستفعل لو ربحت مليون جنيه؟",
+    "time": 20
+  },
+  {
+    "text": "Many people are now ........ to the internet.",
+    "answer": "addicted",
+    "reason": "صفة بمعنى 'مدمن' وتستخدم مع حرف الجر (to).",
+    "translation": "كثير من الناس الآن مدمنون على الإنترنت.",
+    "time": 20
+  },
+  {
+    "text": "If the weather ........ fine tomorrow, we'll go fishing.",
+    "answer": "is",
+    "reason": "الحالة الشرطية الأولى (If + مضارع بسيط).",
+    "translation": "إذا كان الطقس جيداً غداً، سنذهب للصيد.",
+    "time": 20
+  },
+  {
+    "text": "Technology makes our lives easier, but it has some ........ .",
+    "answer": "disadvantages",
+    "reason": "كلمة تعني 'عيوب' وهي نقيض (advantages).",
+    "translation": "التكنولوجيا تجعل حياتنا أسهل، ولكن لها بعض العيوب.",
+    "time": 20
+  },
+  {
+    "text": "If I ........ a bird, I would fly all over the world.",
+    "answer": "were",
+    "reason": "الحالة الثانية للتعبير عن شيء مستحيل (استخدام were مع I).",
+    "translation": "لو كنت طائراً، لطرت في جميع أنحاء العالم.",
+    "time": 20
+  },
+  {
+    "text": "Digital ........ is very important for modern businesses.",
+    "answer": "technology",
+    "reason": "مصطلح 'التكنولوجيا الرقمية'.",
+    "translation": "التكنولوجيا الرقمية مهمة جداً للأعمال الحديثة.",
+    "time": 20
+  },
+  {
+    "text": "While the film ........ , I fell asleep. (Passive)",
+    "answer": "was being shown",
+    "reason": "ماضي مستمر في صيغة المبني للمجهول (was/were + being + P.P).",
+    "translation": "بينما كان الفيلم يُعرض، نمت.",
+    "time": 20
+  },
+  {
+    "text": "A lot of money ........ from the bank last week. (Passive)",
+    "answer": "was stolen",
+    "reason": "ماضي بسيط مبني للمجهول مع تحديد زمن (last week).",
+    "translation": "سُرقت أموال كثيرة من البنك الأسبوع الماضي.",
+    "time": 20
+  },
+  {
+    "text": "Jim Hawkins found a ........ map in the sea chest.",
+    "answer": "treasure",
+    "reason": "من أحداث قصة Treasure Island (خريطة الكنز).",
+    "translation": "وجد جيم هوكينز خريطة كنز في صندوق البحر.",
+    "time": 20
+  },
+  {
+    "text": "The pyramids ........ by the ancient Egyptians.",
+    "answer": "were built",
+    "reason": "ماضي بسيط مبني للمجهول (حقيقة تاريخية).",
+    "translation": "بُنيت الأهرامات بواسطة المصريين القدماء.",
+    "time": 20
+  },
+  {
+    "text": "While the dinner ........ , the guests arrived. (Passive)",
+    "answer": "was being prepared",
+    "reason": "ماضي مستمر مبني للمجهول (حدث كان مستمراً حين قطعه آخر).",
+    "translation": "بينما كان العشاء يُعد، وصل الضيوف.",
+    "time": 20
+  },
+  {
+    "text": "Pirates usually look for buried ........ on islands.",
+    "answer": "treasure",
+    "reason": "القراصنة يبحثون دائماً عن 'الكنز' المدفون.",
+    "translation": "يبحث القراصنة عادة عن الكنز المدفون في الجزر.",
+    "time": 20
+  },
+  {
+    "text": "The room ........ when I arrived at the hotel. (Passive)",
+    "answer": "was being cleaned",
+    "reason": "ماضي مستمر مبني للمجهول.",
+    "translation": "كانت الغرفة تُنظف عندما وصلت إلى الفندق.",
+    "time": 20
+  },
+  {
+    "text": "Long John Silver was a ........ with one leg.",
+    "answer": "pirate",
+    "reason": "وصف شخصية سيلفر في القصة (قرصان برجل واحدة).",
+    "translation": "كان لونج جون سيلفر قرصاناً برجل واحدة.",
+    "time": 20
+  },
+  {
+    "text": "The report ........ yesterday by the manager.",
+    "answer": "was written",
+    "reason": "ماضي بسيط مبني للمجهول.",
+    "translation": "كُتب التقرير بالأمس بواسطة المدير.",
+    "time": 20
+  },
+  {
+    "text": "Many trees ........ down last year to build the road.",
+    "answer": "were cut",
+    "reason": "ماضي بسيط مبني للمجهول (جمع).",
+    "translation": "قُطعت أشجار كثيرة العام الماضي لبناء الطريق.",
+    "time": 20
+  },
+  {
+    "text": "What ........ at 10 p.m. yesterday? (Passive)",
+    "answer": "was being done",
+    "reason": "سؤال في الماضي المستمر المبني للمجهول.",
+    "translation": "ماذا كان يُفعل في الساعة العاشرة مساء أمس؟",
+    "time": 20
+  },
+  {
+    "text": "The 'Hispaniola' was the ........ that sailed to the island.",
+    "answer": "ship",
+    "reason": "اسم السفينة في قصة جزيرة الكنز.",
+    "translation": "كانت 'هيسبانيولا' هي السفينة التي أبحرت إلى الجزيرة.",
+    "time": 20
+  },
+  {
+    "text": "The treasure ........ hidden in a secret cave. (Passive)",
+    "answer": "was",
+    "reason": "ماضي بسيط مبني للمجهول.",
+    "translation": "كان الكنز مخبأً في كهف سري.",
+    "time": 20
+  },
+  {
+    "text": "Who ........ the first telephone?",
+    "answer": "invented",
+    "reason": "فعل بمعنى 'اخترع' في الماضي.",
+    "translation": "من اخترع أول هاتف؟",
+    "time": 20
+  },
+  {
+    "text": "A new bridge ........ over the Nile lately. (Passive)",
+    "answer": "has been built",
+    "reason": "مضارع تام مبني للمجهول لوجود كلمة (lately).",
+    "translation": "بُني جسر جديد فوق النيل مؤخراً.",
+    "time": 20
+  },
+  {
+    "text": "The criminal ........ to prison for his crimes.",
+    "answer": "was sent",
+    "reason": "ماضي بسيط مبني للمجهول.",
+    "translation": "أُرسل المجرم إلى السجن بسبب جرائمه.",
+    "time": 20
+  },
+  {
+    "text": "In the story, Ben Gunn ........ on the island for three years.",
+    "answer": "was marooned",
+    "reason": "فعل يعني 'تُرك وحيداً في مكان مهجور' (خاص بالقصة).",
+    "translation": "في القصة، تُرك بن جان وحيداً في الجزيرة لمدة ثلاث سنوات.",
+    "time": 20
+  },
+  {
+    "text": "The letters ........ by the postman this morning.",
+    "answer": "were delivered",
+    "reason": "ماضي بسيط مبني للمجهول.",
+    "translation": "سُلمت الرسائل بواسطة ساعي البريد هذا الصباح.",
+    "time": 20
+  },
+  {
+    "text": "My car ........ when it started to rain. (Passive)",
+    "answer": "was being repaired",
+    "reason": "ماضي مستمر مبني للمجهول.",
+    "translation": "كانت سيارتي تُصلح عندما بدأت تمطر.",
+    "time": 20
+  },
+  {
+    "text": "The 'Black Spot' was a message of ........ among pirates.",
+    "answer": "threat",
+    "reason": "كلمة تعني 'تهديد' وهي رمز في القصة.",
+    "translation": "كانت 'العلامة السوداء' رسالة تهديد بين القراصنة.",
+    "time": 20
+  },
+  {
+    "text": "He ........ that he was feeling tired.",
+    "answer": "said",
+    "reason": "كلام غير مباشر؛ (said) لا يأتي بعدها مفعول به.",
+    "translation": "قال إنه كان يشعر بالتعب.",
+    "time": 20
+  },
+  {
+    "text": "My teacher ........ me to study hard.",
+    "answer": "told",
+    "reason": "كلام غير مباشر؛ (told) يأتي بعدها مفعول به (me).",
+    "translation": "أخبرني معلمي أن أدرس بجد.",
+    "time": 20
+  },
+  {
+    "text": "She asked me where I ........ the day before.",
+    "answer": "had been",
+    "reason": "تحويل الماضي البسيط إلى ماضي تام في الكلام غير المباشر.",
+    "translation": "سألتني أين كنت في اليوم السابق.",
+    "time": 20
+  },
+  {
+    "text": "'Cyberbullying' means being ........ to people online.",
+    "answer": "cruel",
+    "reason": "التنمر الإلكتروني يعني أن تكون 'قاسياً' مع الآخرين.",
+    "translation": "التنمر الإلكتروني يعني أن تكون قاسياً مع الناس عبر الإنترنت.",
+    "time": 20
+  },
+  {
+    "text": "He said that he ........ to London the following week.",
+    "answer": "would go",
+    "reason": "تحويل (will) إلى (would) في الكلام غير المباشر.",
+    "translation": "قال إنه سيذهب إلى لندن في الأسبوع التالي.",
+    "time": 20
+  },
+  {
+    "text": "Social ........ apps help us stay in touch with friends.",
+    "answer": "media",
+    "reason": "مصطلح 'وسائل التواصل الاجتماعي'.",
+    "translation": "تطبيقات وسائل التواصل الاجتماعي تساعدنا على البقاء على اتصال.",
+    "time": 20
+  },
+  {
+    "text": "I asked him ........ he liked English or not.",
+    "answer": "whether",
+    "reason": "تستخدم (whether) في السؤال غير المباشر بمعنى 'ما إذا كان'.",
+    "translation": "سألته ما إذا كان يحب الإنجليزية أم لا.",
+    "time": 20
+  },
+  {
+    "text": "You should never share your ........ with strangers online.",
+    "answer": "password",
+    "reason": "كلمة السر هي أكثر شيء يجب الحفاظ على خصوصيته.",
+    "translation": "يجب ألا تشارك كلمة مرورك أبداً مع الغرباء عبر الإنترنت.",
+    "time": 20
+  },
+  {
+    "text": "She told me that she ........ her homework already.",
+    "answer": "had done",
+    "reason": "استخدام الماضي التام للتعبير عن حدث تم قبل القول.",
+    "translation": "أخبرتني أنها قامت بأداء واجبها بالفعل.",
+    "time": 20
+  },
+  {
+    "text": "It is important to check the ........ of the news online.",
+    "answer": "source",
+    "reason": "يجب التأكد من 'مصدر' الأخبار.",
+    "translation": "من المهم التحقق من مصدر الأخبار عبر الإنترنت.",
+    "time": 20
+  },
+  {
+    "text": "He asked me ........ I could help him with the project.",
+    "answer": "if",
+    "reason": "استخدام (if) للربط في السؤال غير المباشر.",
+    "translation": "سألني إذا كان بإمكاني مساعدته في المشروع.",
+    "time": 20
+  },
+  {
+    "text": "To use the app, you need to ........ it first.",
+    "answer": "download",
+    "reason": "يجب 'تحميل' التطبيق قبل الاستخدام.",
+    "translation": "لاستخدام التطبيق، عليك تحميله أولاً.",
+    "time": 20
+  },
+  {
+    "text": "The teacher ........ us not to make noise.",
+    "answer": "told",
+    "reason": "فعل القول المناسب للأمر/النهي غير المباشر.",
+    "translation": "أخبرنا المعلم ألا نحدث ضوضاء.",
+    "time": 20
+  },
+  {
+    "text": "A ........ is someone who uses the internet to steal data.",
+    "answer": "hacker",
+    "reason": "تعريف 'المخترق' أو الهاكر.",
+    "translation": "المخترق هو شخص يستخدم الإنترنت لسرقة البيانات.",
+    "time": 20
+  },
+  {
+    "text": "He said he ........ go to the party because he was ill.",
+    "answer": "couldn't",
+    "reason": "تحويل (can't) إلى (couldn't) في الماضي.",
+    "translation": "قال إنه لم يستطع الذهاب للحفلة لأنه كان مريضاً.",
+    "time": 20
+  },
+  {
+    "text": "I asked her ........ her name was.",
+    "answer": "what",
+    "reason": "أداة استفهام للسؤال عن الاسم.",
+    "translation": "سألتها عن اسمها.",
+    "time": 20
+  },
+  {
+    "text": "Using a ........ password makes your account safer.",
+    "answer": "strong",
+    "reason": "كلمة المرور 'القوية' تزيد من الأمان.",
+    "translation": "استخدام كلمة مرور قوية يجعل حسابك أكثر أماناً.",
+    "time": 20
+  },
+  {
+    "text": "She said that the earth ........ round the sun. (Fact)",
+    "answer": "goes",
+    "reason": "الحقائق العلمية تبقى في زمن المضارع البسيط حتى في الكلام غير المباشر.",
+    "translation": "قالت إن الأرض تدور حول الشمس.",
+    "time": 20
+  },
+  {
+    "text": "An ........ is a file you send with an email.",
+    "answer": "attachment",
+    "reason": "كلمة تعني 'مرفق'.",
+    "translation": "المرفق هو ملف ترسله مع البريد الإلكتروني.",
+    "time": 20
+  },
+  {
+    "text": "He ........ whether I had seen his keys.",
+    "answer": "asked",
+    "reason": "فعل القول المناسب للسؤال غير المباشر.",
+    "translation": "سأل ما إذا كنت قد رأيت مفاتيحه.",
+    "time": 20
+  },
+  {
+    "text": "I think it ........ rain this evening. (Prediction)",
+    "answer": "will",
+    "reason": "تنبؤ بدون دليل (Prediction without evidence).",
+    "translation": "أعتقد أنها ستمطر هذا المساء.",
+    "time": 20
+  },
+  {
+    "text": "I ........ my dentist at 5 p.m. tomorrow. (Arrangement)",
+    "answer": "am seeing",
+    "reason": "مضارع مستمر للتعبير عن ترتيبات مستقبلية (Arrangement).",
+    "translation": "سأقابل طبيب الأسنان في الخامسة مساء غد.",
+    "time": 20
+  },
+  {
+    "text": "To protect the environment, we must use ........ energy.",
+    "answer": "renewable",
+    "reason": "كلمة 'متجددة' وهي الطاقة الصديقة للبيئة.",
+    "translation": "لحماية البيئة، يجب أن نستخدم الطاقة المتجددة.",
+    "time": 20
+  },
+  {
+    "text": "Look at those clouds! It ........ rain. (Evidence)",
+    "answer": "is going to",
+    "reason": "تنبؤ بوجود دليل مادي (السحب).",
+    "translation": "انظر إلى تلك السحب! إنها ستمطر.",
+    "time": 20
+  },
+  {
+    "text": "Global ........ is a serious problem for our planet.",
+    "answer": "warming",
+    "reason": "مصطلح الاحتباس الحراري (Global warming).",
+    "translation": "الاحتباس الحراري مشكلة خطيرة لكوكبنا.",
+    "time": 20
+  },
+  {
+    "text": "I ........ to London next Monday; I've got my ticket.",
+    "answer": "am flying",
+    "reason": "ترتيب نهائي (حجز التذكرة) يستخدم المضارع المستمر.",
+    "translation": "سأطير إلى لندن يوم الاثنين القادم؛ لقد حصلت على التذكرة.",
+    "time": 20
+  },
+  {
+    "text": "We should ........ waste to save the environment.",
+    "answer": "recycle",
+    "reason": "فعل 'يعيد تدوير' لتقليل النفايات.",
+    "translation": "يجب علينا إعادة تدوير النفايات لإنقاذ البيئة.",
+    "time": 20
+  },
+  {
+    "text": "The train to Cairo ........ at 7 a.m. tomorrow. (Timetable)",
+    "answer": "leaves",
+    "reason": "مضارع بسيط للمواعيد الثابتة (جداول المواعيد).",
+    "translation": "يغادر قطار القاهرة في السابعة صباح غد.",
+    "time": 20
+  },
+  {
+    "text": "Carbon ........ is a gas that causes pollution.",
+    "answer": "dioxide",
+    "reason": "مصطلح ثاني أكسيد الكربون.",
+    "translation": "ثاني أكسيد الكربون هو غاز يسبب التلوث.",
+    "time": 20
+  },
+  {
+    "text": "I ........ you with your bags; they look heavy. (Offer)",
+    "answer": "will help",
+    "reason": "استخدام (will) لتقديم عرض مساعدة (Offer).",
+    "translation": "سأساعدك في حقائبك؛ تبدو ثقيلة.",
+    "time": 20
+  },
+  {
+    "text": "Solar power is a ........ source of energy.",
+    "answer": "sustainable",
+    "reason": "صفة بمعنى 'مستدامة'.",
+    "translation": "الطاقة الشمسية هي مصدر مستدام للطاقة.",
+    "time": 20
+  },
+  {
+    "text": "I promise I ........ tell anyone your secret.",
+    "answer": "won't",
+    "reason": "استخدام (won't) في الوعد (Promise).",
+    "translation": "أعدك أنني لن أخبر أحداً بسرك.",
+    "time": 20
+  },
+  {
+    "text": "Farmers keep ........ for their meat and milk.",
+    "answer": "cattle",
+    "reason": "كلمة تعني 'ماشية'.",
+    "translation": "يربي المزارعون الماشية من أجل لحومها وألبانها.",
+    "time": 20
+  },
+  {
+    "text": "By the end of this year, I ........ my course.",
+    "answer": "will have finished",
+    "reason": "مستقبل تام (حدث سيكتمل بحلول وقت معين في المستقبل).",
+    "translation": "بحلول نهاية هذا العام، سأكون قد أنهيت دورتي الدراسية.",
+    "time": 20
+  },
+  {
+    "text": "A ........ is a person who works for no money.",
+    "answer": "volunteer",
+    "reason": "تعريف 'المتطوع'.",
+    "translation": "المتطوع هو الشخص الذي يعمل بدون مقابل مادي.",
+    "time": 20
+  },
+  {
+    "text": "My father ........ 50 next month. (Future fact)",
+    "answer": "will be",
+    "reason": "حقيقة مستقبلية (السن).",
+    "translation": "سيكون عمر والدي 50 عاماً الشهر القادم.",
+    "time": 20
+  },
+  {
+    "text": "We must protect ........ species from extinction.",
+    "answer": "endangered",
+    "reason": "مصطلح 'الفصائل المهددة بالانقراض'.",
+    "translation": "يجب علينا حماية الأنواع المهددة بالانقراض من الانقراض.",
+    "time": 20
+  },
+  {
+    "text": "What ........ at this time tomorrow?",
+    "answer": "will you be doing",
+    "reason": "مستقبل مستمر (حدث سيكون مستمراً في وقت محدد في المستقبل).",
+    "translation": "ماذا ستكون تفعل في مثل هذا الوقت غداً؟",
+    "time": 20
+  },
+  {
+    "text": "Education is the key to ........ .",
+    "answer": "success",
+    "reason": "التعليم هو مفتاح 'النجاح'.",
+    "translation": "التعليم هو مفتاح النجاح.",
+    "time": 20
+  },
+  {
+    "text": "People should work together to solve ........ problems.",
+    "answer": "global",
+    "reason": "كلمة تعني 'عالمية'.",
+    "translation": "يجب على الناس العمل معاً لحل المشكلات العالمية.",
+    "time": 20
+  }
+    ]
