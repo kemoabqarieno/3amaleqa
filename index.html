@@ -249,19 +249,17 @@
                 document.getElementById('hintBox').style.display = 'flex';
             }
         });
-
-        // 5. العجلة
-        onValue(ref(db, 'wheel_status'), (snap) => {
-            const status = snap.val();
-            const overlay = document.getElementById('wheelOverlay');
-            if(status === "show") {
-                overlay.style.display = 'flex';
-                document.getElementById('mainWheel').classList.add('spin-anim');
-            } else {
-                overlay.style.display = 'none';
-                document.getElementById('mainWheel').classList.remove('spin-anim');
-            }
-        });
+// 5. مراقبة حالة العجلة للانتقال لصفحة منفصلة
+onValue(ref(db, 'wheel_status'), (snap) => {
+    const status = snap.val();
+    
+    if(status === "show") {
+        // بدلاً من إظهار الـ Overlay، سننتقل لصفحة العجلة الحقيقية
+        window.location.href = "wheel.html";
+    } 
+    // ملاحظة: يمكنك إضافة شرط "hide" إذا كنت تريد العودة لصفحة الأسئلة تلقائياً
+    // لكن عادة العودة تكون يدوية أو ببرمجة داخل صفحة العجلة نفسها
+});
     </script>
 </body>
 </html>
