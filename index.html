@@ -249,16 +249,18 @@
                 document.getElementById('hintBox').style.display = 'flex';
             }
         });
-// 5. مراقبة حالة العجلة للانتقال لصفحة منفصلة
+// 5. مراقبة حالة العجلة للظهور والاختفاء في نفس الصفحة
 onValue(ref(db, 'wheel_status'), (snap) => {
     const status = snap.val();
+    const container = document.getElementById('wheelContainer');
     
     if(status === "show") {
-        // بدلاً من إظهار الـ Overlay، سننتقل لصفحة العجلة الحقيقية
-        window.location.href = "wheel.html";
-    } 
-    // ملاحظة: يمكنك إضافة شرط "hide" إذا كنت تريد العودة لصفحة الأسئلة تلقائياً
-    // لكن عادة العودة تكون يدوية أو ببرمجة داخل صفحة العجلة نفسها
+        container.style.display = 'block';
+        // عشان نضمن إن الصفحة تحمل من جديد أو تبدأ نظيفة
+        document.getElementById('wheelFrame').contentWindow.location.reload();
+    } else {
+        container.style.display = 'none';
+    }
 });
     </script>
 </body>
